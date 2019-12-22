@@ -8,6 +8,7 @@ body {
 
 main {
   height: 600px;
+  width: 1000px;
   align-self: center;
   justify-self: center;
   border: 5px solid green;
@@ -28,13 +29,14 @@ div.stationary-block {
   background-color:purple;
   position: relative;
   top: 30px;
-  left: 600px;
+  left: 300px;
 }
 
 div.bullet {
   height: 50px;
-  width: 50px;
+  width: 10px;
   background-color: blue;
-  border-radius: 100%;
+  border-top-left-radius: 100%;
+  border-top-right-radius: 100%;
   position: absolute;
 }

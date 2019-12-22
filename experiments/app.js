@@ -25,7 +25,7 @@ function setUp() {
     switch (charCode) {
       case 39:
         if (testBlock.offsetLeft < main.scrollWidth - testBlock.offsetWidth) {
-          xPos++
+          xPos += 1
           testBlock.style.left = `${xPos}px`
         } else {
           clearInterval(timerID)
@@ -35,7 +35,7 @@ function setUp() {
         break
       case 37:
         if (testBlock.offsetLeft > 0) {
-          xPos--
+          xPos -= 1
           testBlock.style.left = `${xPos}px`
         } else {
           clearInterval(timerID)
@@ -45,7 +45,7 @@ function setUp() {
         break
       case 40:
         if (testBlock.offsetTop < main.scrollHeight - testBlock.offsetHeight) {
-          yPos++
+          yPos += 1
           testBlock.style.top = `${yPos}px`
         } else {
           clearInterval(timerID)
@@ -55,7 +55,7 @@ function setUp() {
         break
       case 38:
         if (testBlock.offsetTop > 0) {
-          yPos--
+          yPos -= 1
           testBlock.style.top = `${yPos}px`
         } else {
           clearInterval(timerID)
@@ -88,7 +88,7 @@ function setUp() {
     bullet.classList.add('bullet')
     main.appendChild(bullet)
     bullet.style.top = `${yPos}px`
-    bullet.style.left = `${xPos}px`
+    bullet.style.left = `${xPos + 50}px`
     moveBullet(bullet)
   }
 
@@ -97,14 +97,20 @@ function setUp() {
     if (e.keyCode === 13) {
       createBullet()
     } else {
-      charCode = e.keyCode
       clearInterval(timerID)
+      charCode = e.keyCode
       timerID = setInterval(moveBlock, 1)
     }
   }
 
   // Event Listeners
   window.addEventListener('keydown', keyHandler)
+  window.addEventListener('keyup', (e) => {
+    if (e.keyCode !== 13) {
+      clearInterval(timerID)
+      console.log('timer finished')
+    }
+  })
 }
 
 window.addEventListener('DOMContentLoaded', setUp)
