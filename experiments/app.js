@@ -7,9 +7,20 @@ function setUp() {
 
   // DOM Variables
   const testBlock = document.querySelector('.test-block')
+  const statBlock = document.querySelector('.stationary-block')
   const main = document.querySelector('main')
 
   // Functions
+  function checkForCollision(movObj, statObj) {
+    const movX = movObj.offsetLeft
+    const movY = movObj.offsetTop
+    const statX = statObj.offsetLeft
+    const statY = statObj.offsetTop
+    const xCondition = movX + movObj.offsetWidth < statX || movX > statX + statObj.offsetWidth
+    const yCondition = movY + movObj.offsetWidth < statY || movY > statY + statObj.offsetHeight
+    return xCondition || yCondition
+  }
+
   function moveBlock() {
     switch (charCode) {
       case 39:
@@ -61,7 +72,7 @@ function setUp() {
   function moveBullet(bullet) {
     let yCoord = bullet.offsetTop
     const timeID = setInterval(()=> {
-      if (bullet.offsetTop > 0) {
+      if (yCoord > 0 && checkForCollision(bullet, statBlock)) {
         yCoord--
         bullet.style.top = `${yCoord}px`
       } else {
@@ -83,10 +94,10 @@ function setUp() {
 
   // Event Handlers
   function keyHandler(e) {
-    charCode = e.keyCode
-    if (charCode === 13) {
+    if (e.keyCode === 13) {
       createBullet()
     } else {
+      charCode = e.keyCode
       clearInterval(timerID)
       timerID = setInterval(moveBlock, 1)
     }

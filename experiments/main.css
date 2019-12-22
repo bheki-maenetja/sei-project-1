@@ -22,6 +22,15 @@ div.test-block {
   position: relative;
 }
 
+div.stationary-block {
+  height: 100px;
+  width: 100px;
+  background-color:purple;
+  position: relative;
+  top: 30px;
+  left: 600px;
+}
+
 div.bullet {
   height: 50px;
   width: 50px;
