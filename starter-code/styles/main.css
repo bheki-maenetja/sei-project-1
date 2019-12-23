@@ -29,6 +29,14 @@ body {
   top: 90%;
 }
 
+.bullet {
+  width: 10px;
+  height: 30px;
+  background-color: blue;
+  border-radius: 100% 100% 0 0;
+  position: absolute;
+}
+
 .alien-container {
   display: flex;
   flex-wrap: wrap;

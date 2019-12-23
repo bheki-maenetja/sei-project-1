@@ -61,6 +61,29 @@ function setUp() {
     console.log('Time is running')
   }
 
+  function createBullet() {
+    const bullet = document.createElement('div')
+    bullet.classList.add('bullet')
+    battleField.appendChild(bullet)
+    bullet.style.left = `${gunX}%`
+    bullet.style.top = `${gunner.offsetTop}px`
+    moveBullet(bullet)
+  }
+
+  function moveBullet(bullet) {
+    let bulletY = bullet.offsetTop
+    const bulletTimer = setInterval(() => {
+      if (bulletY > 0) {
+        bulletY--
+        bullet.style.top = `${bulletY}px`
+      } else {
+        clearInterval(bulletTimer)
+        battleField.removeChild(bullet)
+        console.log('Shot landed')
+      }
+    }, 5)
+  }
+
   function addAliens() {
     for (let i = 0; i < aliens.length; i++){
       const alien = document.createElement('div')
