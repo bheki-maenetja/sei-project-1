@@ -34,7 +34,7 @@ body {
   flex-wrap: wrap;
   justify-content: center;
   align-items: flex-start;
-  width: 80%;
+  max-width: 60%;
   position: relative;
 }
 

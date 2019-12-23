@@ -5,6 +5,8 @@ function setUp() {
   let alienTimer = null
   let gunX = 50
   let alienX = null
+  let alienY = null
+  let direction = true
 
   // DOM Variables
   const gunner = document.querySelector('div.gunner')
@@ -39,8 +41,23 @@ function setUp() {
   }
 
   function moveAliens() {
-    alienX++
+    switch (direction) {
+      case true:
+        alienX++
+        break
+      case false:
+        alienX--
+        break
+      default:
+        console.log('I got nothing')
+    }
     alienContainer.style.left = `${alienX}px`
+    if (alienContainer.offsetLeft === battleField.scrollWidth - alienContainer.offsetWidth || alienContainer.offsetLeft === 0) {
+      direction = !direction
+      alienY++
+      alienContainer.style.top = `${alienY * 10}px`
+      console.log('alien timer finished')
+    }
     console.log('Time is running')
   }
 
@@ -60,9 +77,9 @@ function setUp() {
     } else if ([37,39].includes(e.keyCode)) {
       clearInterval(gunTimer)
       charCode = e.keyCode
-      gunTimer = setInterval(moveGunner, 1)
+      gunTimer = setInterval(moveGunner, 10)
     } else if (e.keyCode === 38) {
-      alienTimer = setInterval(moveAliens, 10)
+      alienTimer = setInterval(moveAliens, 5)
     }
   }
 
