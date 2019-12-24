@@ -40,9 +40,9 @@ body {
 .alien-container {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  max-width: 60%;
+  justify-content: space-evenly;
+  width: 60%;
+  height: 150px;
   position: relative;
   border: 1px solid cyan;
 }

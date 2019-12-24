@@ -96,14 +96,21 @@ function setUp() {
       alienContainer.appendChild(alien)
       alien.style.backgroundColor = ['yellow', 'green', 'red', 'blue', 'lime', 'grey', 'black'][Math.floor(Math.random() * 7)]
     }
+
+    aliens.forEach(alien => {
+      alien.style.left = `${alien.offsetLeft}px`
+      alien.style.top = `${alien.offsetTop}px`
+    })
+    
+    aliens.forEach(item => item.style.position = 'absolute')
   }
 
   // Collision Detection Functions
   function bulletCollision(movObj, statObj) {
-    const movX = movObj.offsetLeft - 100
+    const movX = movObj.offsetLeft
     const movY = movObj.offsetTop
-    const statX = statObj.offsetLeft
-    const statY = statObj.offsetTop
+    const statX = statObj.offsetLeft + alienContainer.offsetLeft
+    const statY = statObj.offsetTop + alienContainer.offsetTop
     const xCondition = movX + movObj.offsetWidth < statX || movX > statX + statObj.offsetWidth
     const yCondition = movY < statY || movY > statY + statObj.offsetHeight
     return xCondition || yCondition
@@ -140,6 +147,7 @@ function setUp() {
       console.log(e.target.offsetLeft, e.target.offsetTop)
     })
   })
+  
 }
 
 window.addEventListener('DOMContentLoaded', setUp)
