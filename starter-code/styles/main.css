@@ -16,9 +16,9 @@ body {
   align-content: flex-start;
   justify-content: center;
   width: 600px;
-  height: 800px;
+  height: 90%;
   border: 5px solid green;
-  position: relative;
+  position: absolute;
 }
 
 .gunner {
@@ -41,9 +41,10 @@ body {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   max-width: 60%;
   position: relative;
+  border: 1px solid cyan;
 }
 
 .alien {
@@ -51,5 +52,4 @@ body {
   height: 50px;
   background-color: lime;
   border-radius: 100%;
-  margin: 5px;
 }
