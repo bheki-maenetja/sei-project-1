@@ -37,12 +37,19 @@ body {
   position: absolute;
 }
 
+.bomb {
+  width: 20px;
+  height: 30px;
+  background-color: purple;
+  border-radius: 0 0 100% 100%;
+  position: absolute;
+}
+
 .alien-container {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly;
   width: 60%;
-  height: 150px;
   position: relative;
   border: 1px solid cyan;
 }

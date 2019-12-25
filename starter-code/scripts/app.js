@@ -2,7 +2,8 @@ function setUp() {
   // Variables
   let charCode = null
   let gunTimer = null
-  let alienTimer = null
+  let alienMoveTimer = null
+  let alienBombTimer = null
   let gunX = 50
   let alienX = null
   let alienY = null
@@ -78,6 +79,20 @@ function setUp() {
     }, 5)
   }
 
+  function moveBomb(bomb) {
+    let bombY = bomb.offsetTop
+    const bombTimer = setInterval(() => {
+      if (bombY < battleField.offsetHeight - bomb.offsetHeight && bombCollision(bomb, gunner)) {
+        bombY++
+        bomb.style.top = `${bombY}px`
+      } else {
+        clearInterval(bombTimer)
+        battleField.removeChild(bomb)
+        console.log('Bomb landed')
+      }
+    }, 5)
+  }
+
   // Layout Functions
   function createBullet() {
     const bullet = document.createElement('div')
@@ -86,6 +101,15 @@ function setUp() {
     bullet.style.left = `${gunX}%`
     bullet.style.top = `${gunner.offsetTop}px`
     moveBullet(bullet)
+  }
+
+  function createBomb(alien) {
+    const bomb = document.createElement('div')
+    bomb.classList.add('bomb')
+    battleField.appendChild(bomb)
+    bomb.style.left = `${alien.offsetLeft + alienContainer.offsetLeft}px`
+    bomb.style.top = `${alien.offsetTop + alienContainer.offsetTop}px`
+    moveBomb(bomb)
   }
 
   function addAliens() {
@@ -116,6 +140,16 @@ function setUp() {
     return xCondition || yCondition
   }
 
+  function bombCollision(movObj, statObj) {
+    const movX = movObj.offsetLeft
+    const movY = movObj.offsetTop + movObj.offsetHeight
+    const statX = statObj.offsetLeft
+    const statY = statObj.offsetTop
+    const xCondition = movX + movObj.offsetWidth < statX || movX > statX + statObj.offsetWidth
+    const yCondition = movY < statY || movY > statY + statObj.offsetHeight
+    return xCondition || yCondition
+  }
+
   // Event Handlers
   function keyDownHandler(e) {
     if (e.keyCode === 32) {
@@ -125,7 +159,17 @@ function setUp() {
       charCode = e.keyCode
       gunTimer = setInterval(moveGunner, 10)
     } else if (e.keyCode === 38) {
-      alienTimer = setInterval(moveAliens, 5)
+      alienMoveTimer = setInterval(moveAliens, 5)
+    } else if (e.keyCode === 13) {
+      alienBombTimer = setInterval(() => {
+        if (aliens.length > 0) {
+          const chosenAlien = aliens[Math.floor(Math.random() * aliens.length)]
+          createBomb(chosenAlien)
+        } else {
+          clearInterval(alienBombTimer)
+          console.log('Bomb timer cleared')
+        }
+      }, 2000)
     }
   }
 
