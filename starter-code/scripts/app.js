@@ -1,12 +1,13 @@
 function setUp() {
   // Variables
   let charCode = null
+  let gameTimer = null
   let gunTimer = null
   let alienMoveTimer = null
   let alienBombTimer = null
   let gunX = 50
   let alienX = null
-  let alienY = null
+  // let alienY = null
   let direction = true
 
   // DOM Variables
@@ -48,8 +49,11 @@ function setUp() {
     alienContainer.style.left = `${alienX}px`
     if (alienContainer.offsetLeft === battleField.scrollWidth - alienContainer.offsetWidth || alienContainer.offsetLeft === 0) {
       direction = !direction
-      alienY++
-      alienContainer.style.top = `${alienY}%`
+      aliens.forEach(alien => {
+        let alienY = alien.offsetTop / alienContainer.offsetHeight * 100
+        alienY++
+        alien.style.top = `${alienY}%`
+      })
       console.log('alien timer finished')
     }
     console.log('Time is running')
@@ -121,11 +125,11 @@ function setUp() {
       alien.style.backgroundColor = ['yellow', 'green', 'red', 'blue', 'lime', 'grey', 'black'][Math.floor(Math.random() * 7)]
     }
 
-    aliens.forEach(alien => {
-      alien.style.left = `${alien.offsetLeft}px`
-      alien.style.top = `${alien.offsetTop}px`
+    aliens.forEach(item => {
+      item.style.left = `${item.offsetLeft}px`
+      item.style.top = `${item.offsetTop}px`
     })
-    
+
     aliens.forEach(item => item.style.position = 'absolute')
   }
 
@@ -150,6 +154,16 @@ function setUp() {
     return xCondition || yCondition
   }
 
+  // Game Functions
+
+  // function startGame() {
+
+  // }
+
+  // function resetGame() {
+
+  // }
+
   // Event Handlers
   function keyDownHandler(e) {
     if (e.keyCode === 32) {
@@ -159,8 +173,11 @@ function setUp() {
       charCode = e.keyCode
       gunTimer = setInterval(moveGunner, 10)
     } else if (e.keyCode === 38) {
+      alienX = alienContainer.offsetLeft
+      clearInterval(alienMoveTimer)
       alienMoveTimer = setInterval(moveAliens, 5)
     } else if (e.keyCode === 13) {
+      clearInterval(alienBombTimer)
       alienBombTimer = setInterval(() => {
         if (aliens.length > 0) {
           const chosenAlien = aliens[Math.floor(Math.random() * aliens.length)]
@@ -169,7 +186,7 @@ function setUp() {
           clearInterval(alienBombTimer)
           console.log('Bomb timer cleared')
         }
-      }, 2000)
+      }, 200)
     }
   }
 

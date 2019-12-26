@@ -13,6 +13,7 @@ main {
   justify-self: center;
   border: 5px solid green;
   position: relative;
+  margin: 10px
 }
 
 
@@ -39,4 +40,27 @@ div.bullet {
   border-top-left-radius: 100%;
   border-top-right-radius: 100%;
   position: absolute;
+}
+
+main.container-1 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+div.sub-container {
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  position: relative;
+  border: 1px solid cyan;
+  width: 60%;
+  height: 50%;
+}
+
+div.positioner {
+  height: 150px;
+  width: 150px;
+  background-color: pink;
+  place-self: end start;
 }

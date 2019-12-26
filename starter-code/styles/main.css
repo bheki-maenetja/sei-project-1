@@ -48,10 +48,12 @@ body {
 .alien-container {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-evenly;
-  width: 60%;
-  position: relative;
+  justify-content: space-between;
+  align-content: flex-start;
+  width: 50%;
+  height: 100%;
   border: 1px solid cyan;
+  position: absolute;
 }
 
 .alien {

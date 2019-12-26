@@ -8,7 +8,7 @@ function setUp() {
   // DOM Variables
   const testBlock = document.querySelector('.test-block')
   const statBlock = document.querySelector('.stationary-block')
-  const main = document.querySelector('main')
+  const main = document.querySelector('main.container')
 
   // Functions
   function checkForCollision(movObj, statObj) {
