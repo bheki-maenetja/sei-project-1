@@ -67,3 +67,23 @@ body {
   position: absolute;
   margin-top: 0px;
 }
+
+.bunker-container {
+  display: flex;
+  justify-content: space-evenly;
+  background-color: brown;
+  position: absolute;
+  top: 70%;
+  width: 100%;
+}
+
+.bunker {
+  width: 15%;
+  height: 100px;
+  background-color: pink;
+  border-radius: 15px;
+}
+
+.fixed-bunker {
+  position: absolute;
+}

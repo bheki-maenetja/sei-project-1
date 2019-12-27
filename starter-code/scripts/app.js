@@ -14,6 +14,8 @@ function setUp() {
   const battleField = document.querySelector('div.container')
   const alienContainer = document.querySelector('div.alien-container')
   const aliens = new Array(20)
+  const bunkers = new Array(4)
+  let bunkerContainer
   
   // FUNCTIONS
 
@@ -55,6 +57,12 @@ function setUp() {
           clearInterval(bulletTimer)
         }
       })
+      bunkers.map(bunker => {
+        if (!collisionDetector(bullet, bunker, 0, 0, 0, bunkerContainer.offsetTop)) {
+          battleField.removeChild(bullet)
+          clearInterval(bulletTimer)
+        }
+      })
       if (bulletY > 0) {
         bulletY--
         bullet.style.top = `${bulletY}px`
@@ -69,6 +77,13 @@ function setUp() {
   function moveBomb(bomb) {
     let bombY = bomb.offsetTop
     const bombTimer = setInterval(() => {
+      bunkers.map(bunker => {
+        if (!collisionDetector(bomb, bunker, 0, bomb.offsetHeight, 0, bunkerContainer.offsetTop)) {
+          battleField.removeChild(bomb)
+          bunkerContainer.removeChild(bunker)
+          clearInterval(bombTimer)
+        }
+      })
       if (bombY < battleField.scrollHeight - bomb.offsetHeight && collisionDetector(bomb, gunner, 0, bomb.offsetHeight, 0, 0)) {
         bombY++
         bomb.style.top = `${bombY}px`
@@ -80,7 +95,7 @@ function setUp() {
     }, 5)
   }
 
-  // Layout Functions
+  // Bullets & Bombs Functions
   function createBullet() {
     const bullet = document.createElement('div')
     bullet.classList.add('bullet')
@@ -99,6 +114,7 @@ function setUp() {
     moveBomb(bomb)
   }
 
+  // Layout Functions 
   function addAliens() {
     for (let i = 0; i < aliens.length; i++) {
       const alien = document.createElement('div')
@@ -114,6 +130,22 @@ function setUp() {
     })
 
     aliens.forEach(item => item.classList.add('fixed-alien'))
+  }
+
+  function addBunkers() {
+    bunkerContainer = document.createElement('div')
+    battleField.appendChild(bunkerContainer)
+    bunkerContainer.classList.add('bunker-container')
+
+    for (let i = 0; i < bunkers.length; i++) {
+      const bunker = document.createElement('div')
+      bunkerContainer.appendChild(bunker)
+      bunker.classList.add('bunker')
+      bunkers[i] = bunker
+    }
+
+    bunkers.forEach(item => item.style.left = `${item.offsetLeft}px`)
+    bunkers.forEach(item => item.classList.add('fixed-bunker'))
   }
 
   // Collision Detection Functions
@@ -169,8 +201,15 @@ function setUp() {
   // Event Listeners
   window.addEventListener('keydown', keyDownHandler)
   window.addEventListener('keyup', keyUpHandler)
-  
+
   addAliens()
+  addBunkers()
+
+  bunkers.forEach(item => {
+    item.addEventListener('click', (e) => {
+      console.log('Co-ordinates', e.target.offsetLeft, e.target.offsetTop)
+    })
+  })
 }
 
 window.addEventListener('DOMContentLoaded', setUp)
