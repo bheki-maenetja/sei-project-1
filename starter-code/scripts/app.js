@@ -5,15 +5,15 @@ function setUp() {
   let gunTimer = null
   let alienMoveTimer = null
   let alienBombTimer = null
-  let gunX = 50
+  let gunX = null
   let alienX = null
   let direction = true
 
   // DOM Variables
-  const gunner = document.querySelector('div.gunner')
+  let gunner
   const battleField = document.querySelector('div.container')
-  const alienContainer = document.querySelector('div.alien-container')
-  const aliens = new Array(20)
+  let alienContainer
+  let aliens
   const bunkers = new Array(4)
   let bunkerContainer
   
@@ -21,12 +21,11 @@ function setUp() {
 
   // Movement Functions
   function moveGunner() {
+    gunX = gunner.offsetLeft / battleField.scrollWidth * 100
     if (charCode === 39) {
       gunner.offsetLeft < battleField.scrollWidth - gunner.offsetWidth ? gunX++ : clearInterval(gunTimer)
     } else if (charCode === 37) {
       gunner.offsetLeft > 0 ? gunX-- : clearInterval(gunTimer)
-    } else {
-      console.log('X-coordinate', gunner.offsetLeft)
     }
     gunner.style.left = `${gunX}%`
   }
@@ -36,11 +35,16 @@ function setUp() {
     alienContainer.style.left = `${alienX}px`
     if (alienContainer.offsetLeft === battleField.scrollWidth - alienContainer.offsetWidth || alienContainer.offsetLeft === 0) {
       direction = !direction
-      aliens.forEach(alien => {
-        let alienY = alien.offsetTop / alienContainer.offsetHeight * 100
-        alienY++
-        alien.style.top = `${alienY}%`
-      })
+      const alienCondition = aliens.every(alien => alien.offsetTop < alienContainer.scrollHeight - alien.offsetHeight)
+      if (alienCondition) {
+        aliens.forEach(alien => {
+          let alienY = alien.offsetTop / alienContainer.scrollHeight * 100
+          alienY++
+          alien.style.top = `${alienY}%`
+        })
+      } else {
+        console.log('Aliens at the bottom')
+      }
       console.log('alien timer finished')
     }
     console.log('Time is running')
@@ -116,6 +120,11 @@ function setUp() {
 
   // Layout Functions 
   function addAliens() {
+    aliens = new Array(20)
+    alienContainer = document.createElement('div')
+    battleField.appendChild(alienContainer)
+    alienContainer.classList.add('alien-container')
+    
     for (let i = 0; i < aliens.length; i++) {
       const alien = document.createElement('div')
       alien.classList.add('alien')
@@ -148,6 +157,17 @@ function setUp() {
     bunkers.forEach(item => item.classList.add('fixed-bunker'))
   }
 
+  function addGunner() {
+    gunner = document.createElement('div')
+    battleField.appendChild(gunner)
+    gunner.classList.add('gunner')
+  }
+
+  function setBattleField() {
+    addAliens()
+    addBunkers()
+    addGunner()
+  }
   // Collision Detection Functions
   function collisionDetector(movObj, statObj, movOffsetX = 0, movOffsetY = 0, statOffsetX = 0, statOffsetY = 0) {
     const movX = movObj.offsetLeft + movOffsetX
@@ -179,7 +199,7 @@ function setUp() {
     } else if (e.keyCode === 38) {
       alienX = alienContainer.offsetLeft
       clearInterval(alienMoveTimer)
-      alienMoveTimer = setInterval(moveAliens, 5)
+      alienMoveTimer = setInterval(moveAliens, 1)
     } else if (e.keyCode === 13) {
       clearInterval(alienBombTimer)
       alienBombTimer = setInterval(() => {
@@ -202,14 +222,8 @@ function setUp() {
   window.addEventListener('keydown', keyDownHandler)
   window.addEventListener('keyup', keyUpHandler)
 
-  addAliens()
-  addBunkers()
+  setBattleField()
 
-  bunkers.forEach(item => {
-    item.addEventListener('click', (e) => {
-      console.log('Co-ordinates', e.target.offsetLeft, e.target.offsetTop)
-    })
-  })
 }
 
 window.addEventListener('DOMContentLoaded', setUp)
