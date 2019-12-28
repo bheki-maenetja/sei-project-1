@@ -1,5 +1,6 @@
 * {
   box-sizing: border-box;
+  margin: 0;
 }
 
 body {
@@ -13,12 +14,11 @@ body {
 .container {
   display: flex;
   flex-wrap: wrap;
-  align-content: flex-start;
   justify-content: center;
   width: 600px;
   height: 90%;
   border: 5px solid green;
-  position: absolute;
+  position: relative;
 }
 
 .gunner {
@@ -51,7 +51,7 @@ body {
   justify-content: space-between;
   align-content: flex-start;
   width: 50%;
-  height: 70%;
+  height: 65%;
   border: 1px solid black;
   position: absolute;
 }
@@ -86,4 +86,9 @@ body {
 
 .fixed-bunker {
   position: absolute;
+}
+
+.game-board {
+  border: 2px solid blue;
+  align-self: center;
 }

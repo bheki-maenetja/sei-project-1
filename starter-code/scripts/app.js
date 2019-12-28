@@ -1,8 +1,8 @@
 function setUp() {
   // Variables
   let charCode = null
-  let gameTimer = null
   let gunTimer = null
+  let gameTimer = null
   let alienMoveTimer = null
   let alienBombTimer = null
   let gunX = null
@@ -10,11 +10,14 @@ function setUp() {
   let direction = true
 
   // DOM Variables
-  let gunner
   const battleField = document.querySelector('div.container')
+  const startBtn = document.querySelector('#start')
+  const homeDiv = document.querySelector('#home')
+  const gameOverDiv = document.querySelector('#game-over')
+  let gunner
   let alienContainer
   let aliens
-  const bunkers = new Array(4)
+  let bunkers 
   let bunkerContainer
   
   // FUNCTIONS
@@ -142,6 +145,7 @@ function setUp() {
   }
 
   function addBunkers() {
+    bunkers = new Array(4)
     bunkerContainer = document.createElement('div')
     battleField.appendChild(bunkerContainer)
     bunkerContainer.classList.add('bunker-container')
@@ -168,6 +172,12 @@ function setUp() {
     addBunkers()
     addGunner()
   }
+
+  function clearBattleField() {
+    battleField.removeChild(alienContainer)
+    battleField.removeChild(bunkerContainer)
+    battleField.removeChild(gunner)
+  }
   // Collision Detection Functions
   function collisionDetector(movObj, statObj, movOffsetX = 0, movOffsetY = 0, statOffsetX = 0, statOffsetY = 0) {
     const movX = movObj.offsetLeft + movOffsetX
@@ -180,13 +190,25 @@ function setUp() {
   }
   // Game Functions
 
-  // function startGame() {
+  function startGame() {
+    homeDiv.style.display = 'none'
+    gameOverDiv.style.display = 'none'
+    setBattleField()
+    gameTimer = setInterval(checkForGameOver, 1)
+  }
 
-  // }
+  function gameOver() {
+    clearBattleField()
+    homeDiv.style.display = 'initial'
+  }
 
-  // function resetGame() {
-
-  // }
+  function checkForGameOver() {
+    if (aliens.length === 0) {
+      clearInterval(gameTimer)
+      clearInterval(alienMoveTimer)
+      gameOver()
+    }
+  }
 
   // Event Handlers
   function keyDownHandler(e) {
@@ -219,11 +241,11 @@ function setUp() {
   }
 
   // Event Listeners
+  
   window.addEventListener('keydown', keyDownHandler)
   window.addEventListener('keyup', keyUpHandler)
-
-  setBattleField()
-
+  
+  startBtn.addEventListener('click', startGame)
 }
 
 window.addEventListener('DOMContentLoaded', setUp)
