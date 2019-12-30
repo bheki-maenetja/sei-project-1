@@ -3,7 +3,7 @@
   margin: 0;
 }
 
-body {
+main {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -26,6 +26,7 @@ body {
   height: 40px;
   background-color: red;
   position: absolute;
+  left: 45%;
   top: 90%;
 }
 

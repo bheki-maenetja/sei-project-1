@@ -1,20 +1,32 @@
 function setUp() {
-  // Variables
-  let charCode = null
+  // VARIABLES
+  
+  // Game Variables
+  const player = {
+    currentScore: 0,
+    highScore: 0
+  }
+  let isGameOver
+
+
+  // Timer Variables
   let gunTimer = null
   let gameTimer = null
   let alienMoveTimer = null
   let alienBombTimer = null
-  let gunX = null
-  let alienX = null
-  let direction = true
 
   // DOM Variables
-  const battleField = document.querySelector('div.container')
+  let charCode = null
+  let alienX = null
+  let direction = true
   const startBtn = document.querySelector('#start')
+  const homeBtn = document.querySelector('#go-home')
+  const playAgainBtn = document.querySelector('#play-again')
   const homeDiv = document.querySelector('#home')
   const gameOverDiv = document.querySelector('#game-over')
+  const battleField = document.querySelector('div.container')
   let gunner
+  let gunX
   let alienContainer
   let aliens
   let bunkers 
@@ -56,6 +68,11 @@ function setUp() {
   function moveBullet(bullet) {
     let bulletY = bullet.offsetTop
     const bulletTimer = setInterval(() => {
+      if (isGameOver) {
+        clearInterval(bulletTimer)
+        battleField.removeChild(bullet)
+        return
+      }
       aliens.map(alien => {
         if (!collisionDetector(bullet, alien, 0, 0, alienContainer.offsetLeft, alienContainer.offsetTop)) {
           aliens.splice(aliens.indexOf(alien), 1)
@@ -84,6 +101,11 @@ function setUp() {
   function moveBomb(bomb) {
     let bombY = bomb.offsetTop
     const bombTimer = setInterval(() => {
+      if (isGameOver) {
+        clearInterval(bombTimer)
+        battleField.removeChild(bomb)
+        return
+      }
       bunkers.map(bunker => {
         if (!collisionDetector(bomb, bunker, 0, bomb.offsetHeight, 0, bunkerContainer.offsetTop)) {
           battleField.removeChild(bomb)
@@ -165,6 +187,7 @@ function setUp() {
     gunner = document.createElement('div')
     battleField.appendChild(gunner)
     gunner.classList.add('gunner')
+    gunX = gunner.offsetLeft / battleField.scrollWidth * 100
   }
 
   function setBattleField() {
@@ -191,6 +214,7 @@ function setUp() {
   // Game Functions
 
   function startGame() {
+    isGameOver = false
     homeDiv.style.display = 'none'
     gameOverDiv.style.display = 'none'
     setBattleField()
@@ -198,8 +222,9 @@ function setUp() {
   }
 
   function gameOver() {
+    isGameOver = true
     clearBattleField()
-    homeDiv.style.display = 'initial'
+    gameOverDiv.style.display = 'initial'
   }
 
   function checkForGameOver() {
@@ -246,6 +271,14 @@ function setUp() {
   window.addEventListener('keyup', keyUpHandler)
   
   startBtn.addEventListener('click', startGame)
+  playAgainBtn.addEventListener('click', startGame)
+
+  homeBtn.addEventListener('click', () => {
+    gameOverDiv.style.display = 'none'
+    homeDiv.style.display = 'initial'
+  })
+
+  gameOverDiv.style.display = 'none'
 }
 
 window.addEventListener('DOMContentLoaded', setUp)
