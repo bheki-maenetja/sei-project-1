@@ -19,12 +19,19 @@ function setUp() {
   let charCode = null
   let alienX = null
   let direction = true
+
   const startBtn = document.querySelector('#start')
   const homeBtn = document.querySelector('#go-home')
   const playAgainBtn = document.querySelector('#play-again')
+
   const homeDiv = document.querySelector('#home')
   const gameOverDiv = document.querySelector('#game-over')
+  const scoreBoard = document.querySelector('#score-board')
   const battleField = document.querySelector('div.container')
+
+  const playerCurrentScore = document.querySelector('#current-score')
+  const playerFinalScore = document.querySelector('#final-score')
+
   let gunner
   let gunX
   let alienContainer
@@ -57,12 +64,8 @@ function setUp() {
           alienY++
           alien.style.top = `${alienY}%`
         })
-      } else {
-        console.log('Aliens at the bottom')
-      }
-      console.log('alien timer finished')
+      } 
     }
-    console.log('Time is running')
   }
 
   function moveBullet(bullet) {
@@ -79,6 +82,7 @@ function setUp() {
           alienContainer.removeChild(alien)
           battleField.removeChild(bullet)
           clearInterval(bulletTimer)
+          updateScore('kill')
         }
       })
       bunkers.map(bunker => {
@@ -113,13 +117,16 @@ function setUp() {
           clearInterval(bombTimer)
         }
       })
-      if (bombY < battleField.scrollHeight - bomb.offsetHeight && collisionDetector(bomb, gunner, 0, bomb.offsetHeight, 0, 0)) {
-        bombY++
-        bomb.style.top = `${bombY}px`
-      } else {
+      if (!collisionDetector(bomb, gunner, 0, bomb.offsetHeight, 0, 0)) {
         clearInterval(bombTimer)
         battleField.removeChild(bomb)
-        console.log('Bomb landed')
+        updateScore('hit')
+      } else if (bombY === battleField.scrollHeight - bomb.offsetHeight) {
+        clearInterval(bombTimer)
+        battleField.removeChild(bomb)
+      } else {
+        bombY++
+        bomb.style.top = `${bombY}px`
       }
     }, 5)
   }
@@ -141,6 +148,15 @@ function setUp() {
     bomb.style.left = `${alien.offsetLeft + alienContainer.offsetLeft}px`
     bomb.style.top = `${alien.offsetTop + alienContainer.offsetTop}px`
     moveBomb(bomb)
+  }
+
+  function dropBombs() {
+    if (aliens.length > 0) {
+      const chosenAlien = aliens[Math.floor(Math.random() * aliens.length)]
+      createBomb(chosenAlien)
+    } else {
+      clearInterval(alienBombTimer)
+    }
   }
 
   // Layout Functions 
@@ -201,6 +217,7 @@ function setUp() {
     battleField.removeChild(bunkerContainer)
     battleField.removeChild(gunner)
   }
+
   // Collision Detection Functions
   function collisionDetector(movObj, statObj, movOffsetX = 0, movOffsetY = 0, statOffsetX = 0, statOffsetY = 0) {
     const movX = movObj.offsetLeft + movOffsetX
@@ -211,20 +228,33 @@ function setUp() {
     const yCondition = movY < statY || movY > statY + statObj.offsetHeight
     return xCondition || yCondition
   }
-  // Game Functions
 
+  // Game Functions
   function startGame() {
     isGameOver = false
     homeDiv.style.display = 'none'
     gameOverDiv.style.display = 'none'
+    scoreBoard.style.display = 'initial'
     setBattleField()
+    alienMoveTimer = setInterval(moveAliens, 1)
+    alienBombTimer = setInterval(dropBombs, 1000)
     gameTimer = setInterval(checkForGameOver, 1)
   }
 
-  function gameOver() {
-    isGameOver = true
-    clearBattleField()
-    gameOverDiv.style.display = 'initial'
+  function updateScore(event) {
+    switch (event) {
+      case 'kill':
+        player['currentScore'] += 100
+        console.log('Alien Kill!!!\nScore:', player['currentScore'])
+        break
+      case 'hit':
+        player['currentScore'] -= 10
+        console.log('You got hit!\nScore:', player['currentScore'])
+        break
+      default:
+        break
+    }
+    playerCurrentScore.innerHTML = player['currentScore']
   }
 
   function checkForGameOver() {
@@ -233,6 +263,21 @@ function setUp() {
       clearInterval(alienMoveTimer)
       gameOver()
     }
+  }
+  
+  function gameOver() {
+    isGameOver = true
+    clearBattleField()
+    gameOverDiv.style.display = 'initial'
+    playerFinalScore.innerHTML = player['currentScore']
+    player['currentScore'] = 0
+    playerCurrentScore.innerHTML = 0
+    scoreBoard.style.display = 'none'
+  }
+
+  function goHome() {
+    gameOverDiv.style.display = 'none'
+    homeDiv.style.display = 'initial'
   }
 
   // Event Handlers
@@ -243,21 +288,6 @@ function setUp() {
       clearInterval(gunTimer)
       charCode = e.keyCode
       gunTimer = setInterval(moveGunner, 15)
-    } else if (e.keyCode === 38) {
-      alienX = alienContainer.offsetLeft
-      clearInterval(alienMoveTimer)
-      alienMoveTimer = setInterval(moveAliens, 1)
-    } else if (e.keyCode === 13) {
-      clearInterval(alienBombTimer)
-      alienBombTimer = setInterval(() => {
-        if (aliens.length > 0) {
-          const chosenAlien = aliens[Math.floor(Math.random() * aliens.length)]
-          createBomb(chosenAlien)
-        } else {
-          clearInterval(alienBombTimer)
-          console.log('Bomb timer cleared')
-        }
-      }, 200)
     }
   }
 
@@ -266,19 +296,15 @@ function setUp() {
   }
 
   // Event Listeners
-  
   window.addEventListener('keydown', keyDownHandler)
   window.addEventListener('keyup', keyUpHandler)
   
   startBtn.addEventListener('click', startGame)
   playAgainBtn.addEventListener('click', startGame)
-
-  homeBtn.addEventListener('click', () => {
-    gameOverDiv.style.display = 'none'
-    homeDiv.style.display = 'initial'
-  })
+  homeBtn.addEventListener('click', goHome)
 
   gameOverDiv.style.display = 'none'
+  scoreBoard.style.display = 'none'
 }
 
 window.addEventListener('DOMContentLoaded', setUp)
