@@ -176,7 +176,7 @@ function setUp() {
 
     aliens.forEach(item => {
       item.style.left = `${item.offsetLeft}px`
-      item.style.top = `${item.offsetTop}px`
+      item.style.top = `${item.offsetTop / alienContainer.scrollHeight * 100}%`
     })
 
     aliens.forEach(item => item.classList.add('fixed-alien'))
@@ -237,8 +237,14 @@ function setUp() {
     scoreBoard.style.display = 'initial'
     setBattleField()
     alienMoveTimer = setInterval(moveAliens, 1)
-    alienBombTimer = setInterval(dropBombs, 1000)
+    // alienBombTimer = setInterval(dropBombs, 1000)
     gameTimer = setInterval(checkForGameOver, 1)
+    // aliens.forEach(alien => {
+    //   alien.addEventListener('click', () => {
+    //     console.log('Offset (px)', alien.offsetTop)
+    //     console.log('Offset (%)', alien.offsetTop / alienContainer.scrollHeight * 100)
+    //   })
+    // })
   }
 
   function updateScore(event) {
@@ -305,6 +311,8 @@ function setUp() {
 
   gameOverDiv.style.display = 'none'
   scoreBoard.style.display = 'none'
+
+  
 }
 
 window.addEventListener('DOMContentLoaded', setUp)

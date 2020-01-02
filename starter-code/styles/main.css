@@ -22,8 +22,8 @@ main {
 }
 
 .gunner {
-  width: 40px;
-  height: 40px;
+  width: 7%;
+  height: 5%;
   background-color: red;
   position: absolute;
   left: 45%;
@@ -31,16 +31,16 @@ main {
 }
 
 .bullet {
-  width: 10px;
-  height: 30px;
+  width: 2%;
+  height: 4%;
   background-color: blue;
   border-radius: 100% 100% 0 0;
   position: absolute;
 }
 
 .bomb {
-  width: 20px;
-  height: 30px;
+  width: 3%;
+  height: 4%;
   background-color: purple;
   border-radius: 0 0 100% 100%;
   position: absolute;
@@ -58,29 +58,29 @@ main {
 }
 
 .alien {
-  width: 50px;
-  height: 50px;
+  width: 17%;
+  height: 9%;
   border-radius: 100%;
   margin-top: 5px;
 }
 
 .fixed-alien {
-  position: absolute;
   margin-top: 0px;
+  position: absolute;
 }
 
 .bunker-container {
   display: flex;
   justify-content: space-evenly;
-  background-color: brown;
   position: absolute;
   top: 70%;
   width: 100%;
+  height: 12%
 }
 
 .bunker {
   width: 15%;
-  height: 100px;
+  height: 100%;
   background-color: pink;
   border-radius: 15px;
 }
