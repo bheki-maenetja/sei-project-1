@@ -33,6 +33,8 @@ function setUp() {
 
   let gunner
   let gunX
+  let gunStep
+  let alienStep
   let alienContainer
   let aliens
   let bunkers 
@@ -42,19 +44,21 @@ function setUp() {
 
   // Movement Functions
   function moveGunner() {
-    gunX = gunner.offsetLeft / battleField.scrollWidth * 100
+    gunX = gunner.offsetLeft
+    gunStep = 0.01 * battleField.scrollWidth
     if (charCode === 39) {
-      gunner.offsetLeft < battleField.scrollWidth - gunner.offsetWidth ? gunX++ : clearInterval(gunTimer)
+      gunner.offsetLeft + gunStep > battleField.scrollWidth - gunner.offsetWidth ? clearInterval(gunTimer) : gunX += gunStep
     } else if (charCode === 37) {
-      gunner.offsetLeft > 0 ? gunX-- : clearInterval(gunTimer)
+      gunner.offsetLeft - gunStep <= 0 ? clearInterval(gunTimer) : gunX -= gunStep
     }
-    gunner.style.left = `${gunX}%`
+    gunner.style.left = `${gunX}px`
   }
 
   function moveAliens() {
-    direction ? alienX++ : alienX--
+    alienStep = 0.002 * battleField.scrollWidth
+    direction ? alienX += alienStep : alienX -= alienStep
     alienContainer.style.left = `${alienX}px`
-    if (alienContainer.offsetLeft === battleField.scrollWidth - alienContainer.offsetWidth || alienContainer.offsetLeft === 0) {
+    if (alienContainer.offsetLeft >= battleField.scrollWidth - alienContainer.offsetWidth || alienContainer.offsetLeft <= 0) {
       direction = !direction
       const alienCondition = aliens.every(alien => alien.offsetTop < alienContainer.scrollHeight - alien.offsetHeight)
       if (alienCondition) {
@@ -63,7 +67,7 @@ function setUp() {
           alienY += 0.01 * alienContainer.scrollHeight
           alien.style.top = `${alienY}px`
         })
-      } 
+      }
     }
   }
 
@@ -137,7 +141,7 @@ function setUp() {
     const bullet = document.createElement('div')
     bullet.classList.add('bullet')
     battleField.appendChild(bullet)
-    bullet.style.left = `${gunX}%`
+    bullet.style.left = `${gunX}px`
     bullet.style.top = `${gunner.offsetTop}px`
     moveBullet(bullet)
   }
@@ -243,6 +247,7 @@ function setUp() {
     alienMoveTimer = setInterval(moveAliens, 1)
     alienBombTimer = setInterval(dropBombs, 1000)
     gameTimer = setInterval(checkForGameOver, 1)
+    gunner.addEventListener('click', () => console.log('X-pos', gunner.offsetLeft))
   }
 
   function updateScore(event) {

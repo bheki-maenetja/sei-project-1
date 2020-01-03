@@ -54,7 +54,7 @@ main {
   width: 50%;
   height: 65%;
   border: 1px solid black;
-  position: absolute;
+  position: relative;
 }
 
 .alien {
