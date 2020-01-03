@@ -8,7 +8,6 @@ function setUp() {
   }
   let isGameOver
 
-
   // Timer Variables
   let gunTimer = null
   let gameTimer = null
@@ -60,9 +59,9 @@ function setUp() {
       const alienCondition = aliens.every(alien => alien.offsetTop < alienContainer.scrollHeight - alien.offsetHeight)
       if (alienCondition) {
         aliens.forEach(alien => {
-          let alienY = alien.offsetTop / alienContainer.scrollHeight * 100
-          alienY++
-          alien.style.top = `${alienY}%`
+          let alienY = alien.offsetTop
+          alienY += 0.01 * alienContainer.scrollHeight
+          alien.style.top = `${alienY}px`
         })
       } 
     }
@@ -92,7 +91,7 @@ function setUp() {
         }
       })
       if (bulletY > 0) {
-        bulletY--
+        bulletY -= 0.003 * battleField.scrollHeight
         bullet.style.top = `${bulletY}px`
       } else {
         clearInterval(bulletTimer)
@@ -121,12 +120,14 @@ function setUp() {
         clearInterval(bombTimer)
         battleField.removeChild(bomb)
         updateScore('hit')
-      } else if (bombY === battleField.scrollHeight - bomb.offsetHeight) {
+      } else if (bombY >= battleField.scrollHeight - bomb.offsetHeight) {
         clearInterval(bombTimer)
         battleField.removeChild(bomb)
+        console.log('Bomb hit the floor!!!')
       } else {
-        bombY++
+        bombY += 0.003 * battleField.scrollHeight
         bomb.style.top = `${bombY}px`
+        console.log('Moving bomb')
       }
     }, 5)
   }
@@ -151,35 +152,37 @@ function setUp() {
   }
 
   function dropBombs() {
-    if (aliens.length > 0) {
-      const chosenAlien = aliens[Math.floor(Math.random() * aliens.length)]
-      createBomb(chosenAlien)
-    } else {
-      clearInterval(alienBombTimer)
-    }
+    const chosenAlien = aliens[Math.floor(Math.random() * aliens.length)]
+    createBomb(chosenAlien)
   }
 
-  // Layout Functions 
-  function addAliens() {
-    aliens = new Array(20)
+  // Layout Functions
+  function setAliens() {
+    aliens = []
     alienContainer = document.createElement('div')
     battleField.appendChild(alienContainer)
     alienContainer.classList.add('alien-container')
-    
-    for (let i = 0; i < aliens.length; i++) {
+  }
+  
+  function addAliens() {
+    const newAlienWave = new Array(20)
+
+    for (let i = 0; i < newAlienWave.length; i++) {
       const alien = document.createElement('div')
       alien.classList.add('alien')
-      aliens[i] = alien
+      newAlienWave[i] = alien
       alienContainer.appendChild(alien)
       alien.style.backgroundColor = ['yellow', 'green', 'red', 'blue', 'lime', 'grey', 'cyan'][Math.floor(Math.random() * 7)]
     }
 
-    aliens.forEach(item => {
+    newAlienWave.forEach(item => {
       item.style.left = `${item.offsetLeft}px`
       item.style.top = `${item.offsetTop / alienContainer.scrollHeight * 100}%`
     })
 
-    aliens.forEach(item => item.classList.add('fixed-alien'))
+    newAlienWave.forEach(item => item.classList.add('fixed-alien'))
+
+    aliens = aliens.concat(newAlienWave)
   }
 
   function addBunkers() {
@@ -207,6 +210,7 @@ function setUp() {
   }
 
   function setBattleField() {
+    setAliens()
     addAliens()
     addBunkers()
     addGunner()
@@ -237,14 +241,8 @@ function setUp() {
     scoreBoard.style.display = 'initial'
     setBattleField()
     alienMoveTimer = setInterval(moveAliens, 1)
-    // alienBombTimer = setInterval(dropBombs, 1000)
+    alienBombTimer = setInterval(dropBombs, 1000)
     gameTimer = setInterval(checkForGameOver, 1)
-    // aliens.forEach(alien => {
-    //   alien.addEventListener('click', () => {
-    //     console.log('Offset (px)', alien.offsetTop)
-    //     console.log('Offset (%)', alien.offsetTop / alienContainer.scrollHeight * 100)
-    //   })
-    // })
   }
 
   function updateScore(event) {
@@ -267,6 +265,7 @@ function setUp() {
     if (aliens.length === 0) {
       clearInterval(gameTimer)
       clearInterval(alienMoveTimer)
+      clearInterval(alienBombTimer)
       gameOver()
     }
   }
@@ -294,6 +293,8 @@ function setUp() {
       clearInterval(gunTimer)
       charCode = e.keyCode
       gunTimer = setInterval(moveGunner, 15)
+    } else if (e.keyCode === 13) {
+      addAliens()
     }
   }
 
