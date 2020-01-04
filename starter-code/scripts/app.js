@@ -250,18 +250,22 @@ function setUp() {
     // alienBombTimer = setInterval(dropBombs, 1000)
     window.addEventListener('keydown', keyDownHandler)
     window.addEventListener('keyup', keyUpHandler)
-    playGame()
+    gameTimer = setInterval(playGame, 1000)
   }
 
   function playGame() {
-    checkForGameOver()
+    clearInterval(gameOverTimer)
     gameClock--
     timer.innerHTML = gameClock
     aliens.every(item => item.offsetTop > 0.6 * alienContainer.scrollHeight) ? addAliens() : console.log('Not yet')
+    gameOverTimer = setInterval(checkForGameOver, 1)
   }
 
   function checkForGameOver() {
-    if (aliens.length === 0) gameOver()
+    if (aliens.length === 0 || gameClock === 0) {
+      gameOver()
+    }
+    console.log('Running game over timer')
   }
     
   function updateScore(event) {
@@ -287,6 +291,7 @@ function setUp() {
     clearInterval(gameTimer)
     clearInterval(alienMoveTimer)
     clearInterval(alienBombTimer)
+    clearInterval(gameOverTimer)
     goGameOver()    
   }
 
