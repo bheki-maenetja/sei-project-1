@@ -4,13 +4,15 @@ function setUp() {
   // Game Variables
   const player = {
     currentScore: 0,
-    highScore: 0
+    highScore: 0,
   }
   let isGameOver
+  let gameClock = 30
 
   // Timer Variables
   let gunTimer = null
   let gameTimer = null
+  let gameOverTimer = null
   let alienMoveTimer = null
   let alienBombTimer = null
 
@@ -30,6 +32,7 @@ function setUp() {
 
   const playerCurrentScore = document.querySelector('#current-score')
   const playerFinalScore = document.querySelector('#final-score')
+  const timer = document.querySelector('#game-timer')
 
   let gunner
   let gunX
@@ -127,11 +130,9 @@ function setUp() {
       } else if (bombY >= battleField.scrollHeight - bomb.offsetHeight) {
         clearInterval(bombTimer)
         battleField.removeChild(bomb)
-        console.log('Bomb hit the floor!!!')
       } else {
         bombY += 0.003 * battleField.scrollHeight
         bomb.style.top = `${bombY}px`
-        console.log('Moving bomb')
       }
     }, 5)
   }
@@ -210,7 +211,7 @@ function setUp() {
     gunner = document.createElement('div')
     battleField.appendChild(gunner)
     gunner.classList.add('gunner')
-    gunX = gunner.offsetLeft / battleField.scrollWidth * 100
+    gunX = gunner.offsetLeft
   }
 
   function setBattleField() {
@@ -218,6 +219,7 @@ function setUp() {
     addAliens()
     addBunkers()
     addGunner()
+    aliens.forEach(item => item.addEventListener('click', () => console.log(item.offsetTop)))
   }
 
   function clearBattleField() {
@@ -245,11 +247,23 @@ function setUp() {
     scoreBoard.style.display = 'initial'
     setBattleField()
     alienMoveTimer = setInterval(moveAliens, 1)
-    alienBombTimer = setInterval(dropBombs, 1000)
-    gameTimer = setInterval(checkForGameOver, 1)
-    gunner.addEventListener('click', () => console.log('X-pos', gunner.offsetLeft))
+    // alienBombTimer = setInterval(dropBombs, 1000)
+    window.addEventListener('keydown', keyDownHandler)
+    window.addEventListener('keyup', keyUpHandler)
+    playGame()
   }
 
+  function playGame() {
+    checkForGameOver()
+    gameClock--
+    timer.innerHTML = gameClock
+    aliens.every(item => item.offsetTop > 0.6 * alienContainer.scrollHeight) ? addAliens() : console.log('Not yet')
+  }
+
+  function checkForGameOver() {
+    if (aliens.length === 0) gameOver()
+  }
+    
   function updateScore(event) {
     switch (event) {
       case 'kill':
@@ -266,21 +280,19 @@ function setUp() {
     playerCurrentScore.innerHTML = player['currentScore']
   }
 
-  function checkForGameOver() {
-    if (aliens.length === 0) {
-      clearInterval(gameTimer)
-      clearInterval(alienMoveTimer)
-      clearInterval(alienBombTimer)
-      gameOver()
-    }
-  }
-  
   function gameOver() {
     isGameOver = true
     clearBattleField()
+    player['currentScore'] = 0
+    clearInterval(gameTimer)
+    clearInterval(alienMoveTimer)
+    clearInterval(alienBombTimer)
+    goGameOver()    
+  }
+
+  function goGameOver() {
     gameOverDiv.style.display = 'initial'
     playerFinalScore.innerHTML = player['currentScore']
-    player['currentScore'] = 0
     playerCurrentScore.innerHTML = 0
     scoreBoard.style.display = 'none'
   }
@@ -298,9 +310,7 @@ function setUp() {
       clearInterval(gunTimer)
       charCode = e.keyCode
       gunTimer = setInterval(moveGunner, 15)
-    } else if (e.keyCode === 13) {
-      addAliens()
-    }
+    } 
   }
 
   function keyUpHandler(e) {
@@ -308,17 +318,13 @@ function setUp() {
   }
 
   // Event Listeners
-  window.addEventListener('keydown', keyDownHandler)
-  window.addEventListener('keyup', keyUpHandler)
-  
   startBtn.addEventListener('click', startGame)
   playAgainBtn.addEventListener('click', startGame)
   homeBtn.addEventListener('click', goHome)
 
+  // Other
   gameOverDiv.style.display = 'none'
   scoreBoard.style.display = 'none'
-
-  
 }
 
 window.addEventListener('DOMContentLoaded', setUp)
