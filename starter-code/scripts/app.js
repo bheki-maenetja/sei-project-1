@@ -4,17 +4,33 @@ function setUp() {
   // Game Variables
   const player = {
     currentScore: 0,
-    highScore: 0,
+    lives: null,
+    ammo: null
   }
+
   let isGameOver
-  let gameClock = 30
+  let gameClock = null
+  let diffSetting
+
+  const gameDiffSettings = [{
+    waveSize: 15,
+    numWaves: 3,
+    numBunkers: 3
+  }, {
+    waveSize: 23,
+    numWaves: 5,
+    numBunkers: 2
+  }, {
+    waveSize: 30,
+    numWaves: 8,
+    numBunkers: 1
+  }]
 
   // Timer Variables
   let gunTimer = null
   let gameTimer = null
   let gameOverTimer = null
   let alienMoveTimer = null
-  let alienBombTimer = null
 
   // DOM Variables
   let charCode = null
@@ -24,6 +40,7 @@ function setUp() {
   const startBtn = document.querySelector('#start')
   const homeBtn = document.querySelector('#go-home')
   const playAgainBtn = document.querySelector('#play-again')
+  const diffSelector = document.querySelector('select')
 
   const homeDiv = document.querySelector('#home')
   const gameOverDiv = document.querySelector('#game-over')
@@ -169,8 +186,8 @@ function setUp() {
     alienContainer.classList.add('alien-container')
   }
   
-  function addAliens() {
-    const newAlienWave = new Array(20)
+  function addAliens(waveSize) {
+    const newAlienWave = new Array(waveSize)
 
     for (let i = 0; i < newAlienWave.length; i++) {
       const alien = document.createElement('div')
@@ -188,10 +205,13 @@ function setUp() {
     newAlienWave.forEach(item => item.classList.add('fixed-alien'))
 
     aliens = aliens.concat(newAlienWave)
+
+    diffSetting['numWaves']--
+    console.log('NEW ALIENS!!!')
   }
 
-  function addBunkers() {
-    bunkers = new Array(4)
+  function addBunkers(numBunkers) {
+    bunkers = new Array(numBunkers)
     bunkerContainer = document.createElement('div')
     battleField.appendChild(bunkerContainer)
     bunkerContainer.classList.add('bunker-container')
@@ -216,8 +236,8 @@ function setUp() {
 
   function setBattleField() {
     setAliens()
-    addAliens()
-    addBunkers()
+    addAliens(diffSetting.waveSize)
+    addBunkers(diffSetting.numBunkers)
     addGunner()
     aliens.forEach(item => item.addEventListener('click', () => console.log(item.offsetTop)))
   }
@@ -240,14 +260,18 @@ function setUp() {
   }
 
   // Game Functions
-  function startGame() {
+  function setUpGame() {
     isGameOver = false
     homeDiv.style.display = 'none'
     gameOverDiv.style.display = 'none'
     scoreBoard.style.display = 'initial'
+    diffSetting = gameDiffSettings[diffSelector.value - 1]
     setBattleField()
+  }
+
+  function startGame() {
+    setUpGame()
     alienMoveTimer = setInterval(moveAliens, 1)
-    // alienBombTimer = setInterval(dropBombs, 1000)
     window.addEventListener('keydown', keyDownHandler)
     window.addEventListener('keyup', keyUpHandler)
     gameTimer = setInterval(playGame, 1000)
@@ -255,14 +279,16 @@ function setUp() {
 
   function playGame() {
     clearInterval(gameOverTimer)
-    gameClock--
+    gameClock++
     timer.innerHTML = gameClock
-    aliens.every(item => item.offsetTop > 0.6 * alienContainer.scrollHeight) ? addAliens() : console.log('Not yet')
+    if (aliens.every(item => item.offsetTop > 0.6 * alienContainer.scrollHeight)) addAliens(diffSetting.waveSize)
+    dropBombs()
+    console.log('Playing the GAME!')
     gameOverTimer = setInterval(checkForGameOver, 1)
   }
 
   function checkForGameOver() {
-    if (aliens.length === 0 || gameClock === 0) {
+    if (aliens.length === 0 && diffSetting.numWaves === 0) {
       gameOver()
     }
     console.log('Running game over timer')
@@ -290,7 +316,6 @@ function setUp() {
     player['currentScore'] = 0
     clearInterval(gameTimer)
     clearInterval(alienMoveTimer)
-    clearInterval(alienBombTimer)
     clearInterval(gameOverTimer)
     goGameOver()    
   }
