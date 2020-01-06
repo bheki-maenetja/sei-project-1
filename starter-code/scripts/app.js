@@ -3,27 +3,42 @@ function setUp() {
   
   // Game Variables
   const player = {
-    currentScore: 0,
+    currentScore: null,
     lives: null,
-    ammo: null
+    cityPopulation: null,
+    wavesFought: null
   }
 
-  let isGameOver
+  let isGameOver = true
+  let motherShipLife = 5
   let gameClock = null
   let diffSetting
+  let motherShipInPlay = false
 
   const gameDiffSettings = [{
     waveSize: 15,
     numWaves: 3,
-    numBunkers: 3
+    numBunkers: 3,
+    bunkerStrength: 3,
+    playerLives: 5,
+    populationHit: 1000,
+    motherShipsLives: 5
   }, {
     waveSize: 23,
     numWaves: 5,
-    numBunkers: 2
+    numBunkers: 2,
+    bunkerStrength: 6,
+    playerLives: 3,
+    populationHit: 2000,
+    motherShipsLives: 10
   }, {
     waveSize: 30,
     numWaves: 8,
-    numBunkers: 1
+    numBunkers: 1,
+    bunkerStrength: 9,
+    playerLives: 1,
+    populationHit: 4000,
+    motherShipsLives: 15
   }]
 
   // Timer Variables
@@ -50,15 +65,17 @@ function setUp() {
   const playerCurrentScore = document.querySelector('#current-score')
   const playerFinalScore = document.querySelector('#final-score')
   const timer = document.querySelector('#game-timer')
+  const lifeCount = document.querySelector('#life-count')
+  const populationCount = document.querySelector('#population-count')
 
-  let gunner
-  let gunX
+  let alienContainer
+  let bunkerContainer
   let gunStep
   let alienStep
-  let alienContainer
+  let gunner
+  let gunX
   let aliens
   let bunkers 
-  let bunkerContainer
   
   // FUNCTIONS
 
@@ -99,18 +116,33 @@ function setUp() {
         battleField.removeChild(bullet)
         return
       }
-      aliens.map(alien => {
+      aliens.forEach(alien => {
         if (!collisionDetector(bullet, alien, 0, 0, alienContainer.offsetLeft, alienContainer.offsetTop)) {
-          aliens.splice(aliens.indexOf(alien), 1)
-          alienContainer.removeChild(alien)
+          if (alien.classList.contains('mothership')) {
+            motherShipLife--
+            if (motherShipLife === 0) {
+              alienContainer.removeChild(alien)
+              aliens.splice(aliens.indexOf(alien), 1)
+              updateScore('motherShipKill')
+            }
+          } else {
+            alienContainer.removeChild(alien)
+            aliens.splice(aliens.indexOf(alien), 1)
+            updateScore('alienKill')
+          }
           battleField.removeChild(bullet)
-          clearInterval(bulletTimer)
-          updateScore('kill')
+          clearInterval(bulletTimer)  
         }
       })
       bunkers.map(bunker => {
-        if (!collisionDetector(bullet, bunker, 0, 0, 0, bunkerContainer.offsetTop)) {
+        if (!collisionDetector(bullet, bunker[0], 0, 0, 0, bunkerContainer.offsetTop)) {
           battleField.removeChild(bullet)
+          bunker[1]--
+          console.log('Bunker strength', bunker[1])
+          if (bunker[1] === 0) {
+            bunkerContainer.removeChild(bunker[0])
+            bunkers.splice(bunkers.indexOf(bunker), 1)
+          }
           clearInterval(bulletTimer)
         }
       })
@@ -133,20 +165,26 @@ function setUp() {
         battleField.removeChild(bomb)
         return
       }
-      bunkers.map(bunker => {
-        if (!collisionDetector(bomb, bunker, 0, bomb.offsetHeight, 0, bunkerContainer.offsetTop)) {
+      bunkers.forEach(bunker => {
+        if (!collisionDetector(bomb, bunker[0], 0, bomb.offsetHeight, 0, bunkerContainer.offsetTop)) {
           battleField.removeChild(bomb)
-          bunkerContainer.removeChild(bunker)
+          bunker[1]--
+          console.log('Bunker strength', bunker[1])
+          if (bunker[1] === 0) {
+            bunkerContainer.removeChild(bunker[0])
+            bunkers.splice(bunkers.indexOf(bunker), 1)
+          }
           clearInterval(bombTimer)
         }
       })
       if (!collisionDetector(bomb, gunner, 0, bomb.offsetHeight, 0, 0)) {
         clearInterval(bombTimer)
         battleField.removeChild(bomb)
-        updateScore('hit')
+        updateScore('gunnerHit')
       } else if (bombY >= battleField.scrollHeight - bomb.offsetHeight) {
         clearInterval(bombTimer)
         battleField.removeChild(bomb)
+        updateScore('cityHit')
       } else {
         bombY += 0.003 * battleField.scrollHeight
         bomb.style.top = `${bombY}px`
@@ -174,8 +212,10 @@ function setUp() {
   }
 
   function dropBombs() {
-    const chosenAlien = aliens[Math.floor(Math.random() * aliens.length)]
-    createBomb(chosenAlien)
+    if ([true, false][Math.floor(Math.random() * 2)]) {
+      const chosenAlien = aliens[Math.floor(Math.random() * aliens.length)]
+      createBomb(chosenAlien)
+    }
   }
 
   // Layout Functions
@@ -194,7 +234,7 @@ function setUp() {
       alien.classList.add('alien')
       newAlienWave[i] = alien
       alienContainer.appendChild(alien)
-      alien.style.backgroundColor = ['yellow', 'green', 'red', 'blue', 'lime', 'grey', 'cyan'][Math.floor(Math.random() * 7)]
+      alien.style.backgroundColor = ['yellow', 'green', 'red', 'blue', 'lime', 'cyan', 'violet'][Math.floor(Math.random() * 7)]
     }
 
     newAlienWave.forEach(item => {
@@ -206,25 +246,38 @@ function setUp() {
 
     aliens = aliens.concat(newAlienWave)
 
-    diffSetting['numWaves']--
-    console.log('NEW ALIENS!!!')
+    player['wavesFought']--
   }
 
-  function addBunkers(numBunkers) {
+  function addMotherShip() {
+    const motherShip = document.createElement('div')
+    alienContainer.appendChild(motherShip)
+    motherShip.classList.add('mothership')
+
+    motherShip.style.left = `${motherShip.offsetLeft}px`
+    motherShip.style.top = `${motherShip.offsetTop}px`
+    motherShip.classList.add('fixed-mothership')
+
+    aliens.push(motherShip)
+    motherShipInPlay = true
+    player['wavesFought']--
+  }
+
+  function addBunkers(numBunkers, bunkerStrength) {
     bunkers = new Array(numBunkers)
     bunkerContainer = document.createElement('div')
     battleField.appendChild(bunkerContainer)
     bunkerContainer.classList.add('bunker-container')
 
     for (let i = 0; i < bunkers.length; i++) {
-      const bunker = document.createElement('div')
-      bunkerContainer.appendChild(bunker)
-      bunker.classList.add('bunker')
-      bunkers[i] = bunker
+      const bunkerDiv = document.createElement('div')
+      bunkerDiv.classList.add('bunker')
+      bunkers[i] = [bunkerDiv, bunkerStrength]
+      bunkerContainer.appendChild(bunkerDiv)
     }
 
-    bunkers.forEach(item => item.style.left = `${item.offsetLeft}px`)
-    bunkers.forEach(item => item.classList.add('fixed-bunker'))
+    bunkers.forEach(item => item[0].style.left = `${item[0].offsetLeft}px`)
+    bunkers.forEach(item => item[0].classList.add('fixed-bunker'))
   }
 
   function addGunner() {
@@ -237,7 +290,7 @@ function setUp() {
   function setBattleField() {
     setAliens()
     addAliens(diffSetting.waveSize)
-    addBunkers(diffSetting.numBunkers)
+    addBunkers(diffSetting.numBunkers, diffSetting.bunkerStrength)
     addGunner()
     aliens.forEach(item => item.addEventListener('click', () => console.log(item.offsetTop)))
   }
@@ -260,20 +313,34 @@ function setUp() {
   }
 
   // Game Functions
-  function setUpGame() {
-    isGameOver = false
+  function setHTML() {
     homeDiv.style.display = 'none'
     gameOverDiv.style.display = 'none'
     scoreBoard.style.display = 'initial'
+    playerCurrentScore.innerHTML = 0
+    timer.innerHTML = 0
+    populationCount.innerHTML = player.cityPopulation
+    lifeCount.innerHTML = player.lives
+  }
+
+  function setPlayer() {
+    player['lives'] = diffSetting.playerLives
+    player['cityPopulation'] = 100000
+    player['wavesFought'] = diffSetting.numWaves
+  }
+
+  function setUpGame() {
     diffSetting = gameDiffSettings[diffSelector.value - 1]
+    motherShipLife = diffSetting.motherShipsLives
+    setPlayer()
+    setHTML()
     setBattleField()
   }
 
   function startGame() {
+    isGameOver = false
     setUpGame()
     alienMoveTimer = setInterval(moveAliens, 1)
-    window.addEventListener('keydown', keyDownHandler)
-    window.addEventListener('keyup', keyUpHandler)
     gameTimer = setInterval(playGame, 1000)
   }
 
@@ -281,49 +348,101 @@ function setUp() {
     clearInterval(gameOverTimer)
     gameClock++
     timer.innerHTML = gameClock
-    if (aliens.every(item => item.offsetTop > 0.6 * alienContainer.scrollHeight)) addAliens(diffSetting.waveSize)
+    if (player.wavesFought === 0 && !motherShipInPlay && aliens.length === 0) addMotherShip()
+    if (aliens.every(item => item.offsetTop > 0.6 * alienContainer.scrollHeight) && !motherShipInPlay) addAliens(diffSetting.waveSize)
     dropBombs()
-    console.log('Playing the GAME!')
+    // console.log('Playing the GAME!')
     gameOverTimer = setInterval(checkForGameOver, 1)
   }
 
   function checkForGameOver() {
-    if (aliens.length === 0 && diffSetting.numWaves === 0) {
+    if (aliens.length === 0 && player.wavesFought < 0 || player.lives === 0 || player.cityPopulation === 0) {
       gameOver()
     }
-    console.log('Running game over timer')
+    // console.log('Running game over timer')
   }
     
   function updateScore(event) {
     switch (event) {
-      case 'kill':
+      case 'alienKill':
         player['currentScore'] += 100
         console.log('Alien Kill!!!\nScore:', player['currentScore'])
         break
-      case 'hit':
-        player['currentScore'] -= 10
-        console.log('You got hit!\nScore:', player['currentScore'])
+      case 'motherShipKill':
+        player['currentScore'] += motherShipLife === 0 ? 500 : 0
+        console.log('You killed the mothership!!!\nScore', player['currentScore'])
+        break
+      case 'cityHit':
+        player['cityPopulation'] -= diffSetting.populationHit
+        console.log('City hit!\nPopulation Remaining:', player['cityPopulation'])
+        break
+      case 'gunnerHit':
+        player['lives']--
+        console.log(`You've been hit!\nLives remaining: ${player['lives']}`)
         break
       default:
         break
     }
     playerCurrentScore.innerHTML = player['currentScore']
+    lifeCount.innerHTML = player['lives']
+    populationCount.innerHTML = player['cityPopulation']
   }
 
-  function gameOver() {
-    isGameOver = true
-    clearBattleField()
-    player['currentScore'] = 0
+  function resetPlayer() {
+    Object.keys(player).map(key => player[key] = null)
+  }
+
+  function resetTimers() {
+    clearInterval(gunTimer)
     clearInterval(gameTimer)
     clearInterval(alienMoveTimer)
     clearInterval(gameOverTimer)
-    goGameOver()    
+    gunTimer = null
+    gameTimer = null
+    gameOverTimer = null
+    alienMoveTimer = null
+  }
+
+  function resetDomVars() {
+    charCode = null
+    alienX = null
+    direction = true
+    alienContainer = null
+    bunkerContainer = null
+    gunStep = null
+    alienStep = null
+    gunner = null
+    gunX = null
+    aliens = null
+    bunkers  = null
+  }
+
+  function resetHTML() {
+    playerCurrentScore.innerHTML = 0
+    timer.innerHTML = 0
+    populationCount.innerHTML = 0
+    lifeCount.innerHTML = 0
+  }
+
+  function resetGame() {
+    diffSetting = gameDiffSettings[diffSelector.value - 1]
+    gameClock = null
+    isGameOver = true
+    resetPlayer()
+    resetTimers()
+    resetDomVars()
+  }
+
+  function gameOver() {
+    clearBattleField()
+    goGameOver()
+    resetGame()
+    resetHTML()    
   }
 
   function goGameOver() {
     gameOverDiv.style.display = 'initial'
     playerFinalScore.innerHTML = player['currentScore']
-    playerCurrentScore.innerHTML = 0
     scoreBoard.style.display = 'none'
   }
 
@@ -334,13 +453,15 @@ function setUp() {
 
   // Event Handlers
   function keyDownHandler(e) {
-    if (e.keyCode === 32) {
+    if (isGameOver) {
+      console.log('Game is not in play!')
+    } else if (e.keyCode === 32) {
       createBullet()
     } else if ([37,39].includes(e.keyCode)) {
       clearInterval(gunTimer)
       charCode = e.keyCode
       gunTimer = setInterval(moveGunner, 15)
-    } 
+    }
   }
 
   function keyUpHandler(e) {
@@ -351,6 +472,9 @@ function setUp() {
   startBtn.addEventListener('click', startGame)
   playAgainBtn.addEventListener('click', startGame)
   homeBtn.addEventListener('click', goHome)
+
+  window.addEventListener('keydown', keyDownHandler)
+  window.addEventListener('keyup', keyUpHandler)
 
   // Other
   gameOverDiv.style.display = 'none'

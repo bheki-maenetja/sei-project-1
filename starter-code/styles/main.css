@@ -33,7 +33,7 @@ main {
 .bullet {
   width: 2%;
   height: 4%;
-  background-color: blue;
+  background-color: silver;
   border-radius: 100% 100% 0 0;
   position: absolute;
 }
@@ -69,6 +69,19 @@ main {
   position: absolute;
 }
 
+.mothership {
+  width: 34%;
+  height: 18%;
+  margin-top: 5px;
+  background-color: lime;
+  margin: 5px auto
+}
+
+.fixed-mothership {
+  position: absolute;
+  margin: 0
+}
+
 .bunker-container {
   display: flex;
   justify-content: space-evenly;
@@ -81,7 +94,7 @@ main {
 .bunker {
   width: 15%;
   height: 100%;
-  background-color: pink;
+  background-color: grey;
   border-radius: 15px;
 }
 
@@ -92,4 +105,5 @@ main {
 .game-board {
   border: 2px solid blue;
   align-self: center;
+  background-color: deepskyblue;
 }
