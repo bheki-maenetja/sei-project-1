@@ -3,6 +3,11 @@
   margin: 0;
 }
 
+/* body {
+  background-image: url('../assets/space-background.jpg');
+  background-size: cover;
+} */
+
 main {
   display: flex;
   justify-content: space-evenly;
@@ -33,7 +38,7 @@ main {
 .bullet {
   width: 2%;
   height: 4%;
-  background-color: silver;
+  background-color: grey;
   border-radius: 100% 100% 0 0;
   position: absolute;
 }
@@ -94,7 +99,7 @@ main {
 .bunker {
   width: 15%;
   height: 100%;
-  background-color: grey;
+  background-color: lightgray;
   border-radius: 15px;
 }
 

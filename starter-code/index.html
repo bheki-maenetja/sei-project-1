@@ -20,14 +20,32 @@
             </select>
           </form>
           <a href="#" id="stats">Stats</a>
-          <p>High Score: <span></span></p>
+          <p>High Score: <span class="high-score"></span></p>
         </div>
-        <div class="game-board" id="game-over">
+        <div id="game-over" class="game-board">
           <h2>Game Over</h2>
+          <p id="game-result"></p>
           <p>Score: <span id="final-score"></span></p>
-          <p>High Score: <span></span></p>
+          <p>Game Time: <span id="game-time"></span>s</p>
+          <p>High Score: <span class="high-score"></span></p>
           <a href="#" id="play-again">Play Again</a>
-          <a href="#" id="go-home">Home</a>
+          <a href="#" class="go-home">Home</a>
+        </div>
+        <div id="player-stats" class="game-board">
+          <h2>Player Stats</h2>
+          <p>Games Played: <span class='game-stat'></span></p>
+          <p>Total Wins: <span class='game-stat'></span></p>
+          <p>Total Losses: <span class='game-stat'></span></p>
+          <p>High Score: <span class='game-stat'></span></p>
+          <p>Total Score: <span class='game-stat'></span></p>
+          <p>Total Alien Kills: <span class='game-stat'></span></p>
+          <p>Total Mothership Kills: <span class='game-stat'></span></p>
+          <p>Total Waves Fought: <span class='game-stat'></span></p>
+          <p>Total Ammo Used: <span class='game-stat'></span></p>
+          <p>Total Lives Lost: <span class='game-stat'></span></p>
+          <p>Total Population Loss: <span class='game-stat'></span></p>
+          <p>Total time spent playing game: <span class='game-stat'></span>s</p>
+          <a href="#" class="go-home">Home</a>
         </div>
       </div>
       <div id="score-board" class="game-board">
@@ -35,6 +53,7 @@
         <p>Score: <span id="current-score"></span></p>
         <p>Timer: <span id="game-timer"></span>s</p>
         <p>Lives remaining: <span id="life-count"></span></p>
+        <p>Remaining ammo: <span id="ammo-count"></span></p>
         <p>Population: <span id="population-count"></span></p>
       </div>
     </main>

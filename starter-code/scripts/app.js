@@ -5,15 +5,21 @@ function setUp() {
   const player = {
     currentScore: null,
     lives: null,
+    ammo: null,
     cityPopulation: null,
-    wavesFought: null
+    wavesFought: null,
+    alienKills: null,
+    motherShipKills: null
   }
 
   let isGameOver = true
-  let motherShipLife = 5
+  let motherShipLife
   let gameClock = null
   let diffSetting
   let motherShipInPlay = false
+
+  const gamePlayStats = ['gamesPlayed', 'wins', 'losses','highScore', 'totalScore', 'alienKills', 'motherShipKills', 'wavesFought', 'ammoUsed', 'livesLost', 'populationLoss', 'gameTime']
+  gamePlayStats.forEach(stat => localStorage.setItem(stat, 0))
 
   const gameDiffSettings = [{
     waveSize: 15,
@@ -21,6 +27,7 @@ function setUp() {
     numBunkers: 3,
     bunkerStrength: 3,
     playerLives: 5,
+    playerAmmo: 65,
     populationHit: 1000,
     motherShipsLives: 5
   }, {
@@ -29,6 +36,7 @@ function setUp() {
     numBunkers: 2,
     bunkerStrength: 6,
     playerLives: 3,
+    playerAmmo: 130,
     populationHit: 2000,
     motherShipsLives: 10
   }, {
@@ -37,6 +45,7 @@ function setUp() {
     numBunkers: 1,
     bunkerStrength: 9,
     playerLives: 1,
+    playerAmmo: 290,
     populationHit: 4000,
     motherShipsLives: 15
   }]
@@ -53,20 +62,29 @@ function setUp() {
   let direction = true
 
   const startBtn = document.querySelector('#start')
-  const homeBtn = document.querySelector('#go-home')
+  const homeBtn = document.querySelectorAll('.go-home')
+  const statsBtn = document.querySelector('#stats')
   const playAgainBtn = document.querySelector('#play-again')
   const diffSelector = document.querySelector('select')
 
   const homeDiv = document.querySelector('#home')
   const gameOverDiv = document.querySelector('#game-over')
+  const statsBoardDiv = document.querySelector('#player-stats') 
   const scoreBoard = document.querySelector('#score-board')
   const battleField = document.querySelector('div.container')
 
   const playerCurrentScore = document.querySelector('#current-score')
-  const playerFinalScore = document.querySelector('#final-score')
+  const populationCount = document.querySelector('#population-count')
   const timer = document.querySelector('#game-timer')
   const lifeCount = document.querySelector('#life-count')
-  const populationCount = document.querySelector('#population-count')
+  const ammoCount = document.querySelector('#ammo-count')
+
+  const playerFinalScore = document.querySelector('#final-score')
+  const finalGameTime = document.querySelector('#game-time')
+  const playerHighScore = document.querySelectorAll('.high-score')
+  const gameResult = document.querySelector('#game-result')
+
+  const gameStats = document.querySelectorAll('.game-stat')
 
   let alienContainer
   let bunkerContainer
@@ -202,6 +220,16 @@ function setUp() {
     moveBullet(bullet)
   }
 
+  function fireBullet() {
+    if (player.ammo > 0) {
+      createBullet()
+      player['ammo']--
+    } else {
+      console.log('YOU\'RE OUT of AMMO!!!')
+    }
+    ammoCount.innerHTML = player.ammo > 0 ? player.ammo : 'OUT OF AMMO'
+  }
+
   function createBomb(alien) {
     const bomb = document.createElement('div')
     bomb.classList.add('bomb')
@@ -321,12 +349,14 @@ function setUp() {
     timer.innerHTML = 0
     populationCount.innerHTML = player.cityPopulation
     lifeCount.innerHTML = player.lives
+    ammoCount.innerHTML = player.ammo
   }
 
   function setPlayer() {
     player['lives'] = diffSetting.playerLives
     player['cityPopulation'] = 100000
     player['wavesFought'] = diffSetting.numWaves
+    player['ammo'] = diffSetting.playerAmmo
   }
 
   function setUpGame() {
@@ -348,7 +378,7 @@ function setUp() {
     clearInterval(gameOverTimer)
     gameClock++
     timer.innerHTML = gameClock
-    if (player.wavesFought === 0 && !motherShipInPlay && aliens.length === 0) addMotherShip()
+    if (player.wavesFought === 0 && !motherShipInPlay && aliens.every(item => item.offsetTop > 0.6 * alienContainer.scrollHeight)) addMotherShip()
     if (aliens.every(item => item.offsetTop > 0.6 * alienContainer.scrollHeight) && !motherShipInPlay) addAliens(diffSetting.waveSize)
     dropBombs()
     // console.log('Playing the GAME!')
@@ -361,15 +391,17 @@ function setUp() {
     }
     // console.log('Running game over timer')
   }
-    
+  
   function updateScore(event) {
     switch (event) {
       case 'alienKill':
         player['currentScore'] += 100
+        player['alienKills']++
         console.log('Alien Kill!!!\nScore:', player['currentScore'])
         break
       case 'motherShipKill':
         player['currentScore'] += motherShipLife === 0 ? 500 : 0
+        player['motherShipKills']++
         console.log('You killed the mothership!!!\nScore', player['currentScore'])
         break
       case 'cityHit':
@@ -422,19 +454,47 @@ function setUp() {
     timer.innerHTML = 0
     populationCount.innerHTML = 0
     lifeCount.innerHTML = 0
+
   }
 
   function resetGame() {
     diffSetting = gameDiffSettings[diffSelector.value - 1]
     gameClock = null
     isGameOver = true
+    motherShipInPlay = false
     resetPlayer()
     resetTimers()
     resetDomVars()
   }
 
+  function updateStats() {
+    localStorage.gamesPlayed = parseInt(localStorage.gamesPlayed) + 1
+    if (player['currentScore'] > parseInt(localStorage.highScore)) localStorage.highScore = player['currentScore']
+    localStorage.totalScore = parseInt(localStorage.totalScore) + player.currentScore
+    localStorage.alienKills = parseInt(localStorage.alienKills) + player.alienKills
+    localStorage.motherShipKills = parseInt(localStorage.motherShipKills) + player.motherShipKills
+    localStorage.wavesFought = parseInt(localStorage.wavesFought) + (diffSetting.numWaves - player.wavesFought)
+    localStorage.ammoUsed = parseInt(localStorage.ammoUsed) + (diffSetting.playerAmmo - player.ammo)
+    localStorage.livesLost = parseInt(localStorage.livesLost) + (diffSetting.playerLives - player.lives)
+    localStorage.populationLoss = parseInt(localStorage.populationLoss) + (100000 - player.cityPopulation)
+    localStorage.gameTime = parseInt(localStorage.gameTime) + gameClock
+    console.log(localStorage)
+  }
+
+  function getResult() {
+    if (aliens.length === 0 && player.wavesFought < 0) {
+      gameResult.innerHTML = 'YOU WON!!!'
+      localStorage.wins = parseInt(localStorage.wins) + 1
+    } else {
+      gameResult.innerHTML = 'YOU LOST'
+      localStorage.losses = parseInt(localStorage.losses) + 1
+    } 
+  }
+
   function gameOver() {
+    getResult()
     clearBattleField()
+    updateStats()
     goGameOver()
     resetGame()
     resetHTML()    
@@ -444,11 +504,22 @@ function setUp() {
     gameOverDiv.style.display = 'initial'
     playerFinalScore.innerHTML = player['currentScore']
     scoreBoard.style.display = 'none'
+    playerHighScore.forEach(item => item.innerHTML = localStorage.highScore)
+    finalGameTime.innerHTML = gameClock
   }
 
   function goHome() {
+    statsBoardDiv.style.display = 'none'
     gameOverDiv.style.display = 'none'
     homeDiv.style.display = 'initial'
+  }
+
+  function goStats() {
+    homeDiv.style.display = 'none'
+    statsBoardDiv.style.display = 'initial'
+    for (let i = 0; i < gamePlayStats.length; i++) {
+      gameStats[i].innerHTML = localStorage[gamePlayStats[i]]
+    }
   }
 
   // Event Handlers
@@ -456,7 +527,7 @@ function setUp() {
     if (isGameOver) {
       console.log('Game is not in play!')
     } else if (e.keyCode === 32) {
-      createBullet()
+      fireBullet()
     } else if ([37,39].includes(e.keyCode)) {
       clearInterval(gunTimer)
       charCode = e.keyCode
@@ -471,7 +542,8 @@ function setUp() {
   // Event Listeners
   startBtn.addEventListener('click', startGame)
   playAgainBtn.addEventListener('click', startGame)
-  homeBtn.addEventListener('click', goHome)
+  homeBtn.forEach(Btn => Btn.addEventListener('click', goHome))
+  statsBtn.addEventListener('click', goStats)
 
   window.addEventListener('keydown', keyDownHandler)
   window.addEventListener('keyup', keyUpHandler)
@@ -479,6 +551,7 @@ function setUp() {
   // Other
   gameOverDiv.style.display = 'none'
   scoreBoard.style.display = 'none'
+  statsBoardDiv.style.display = 'none'
 }
 
 window.addEventListener('DOMContentLoaded', setUp)
