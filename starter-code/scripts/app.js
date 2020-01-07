@@ -90,6 +90,11 @@ function setUp() {
 
   const gameStats = document.querySelectorAll('.game-stat')
 
+  const falconBlastAudio = document.querySelector('#falcon-blast')
+  const bombDropAudio = document.querySelector('#bomb-drop')
+  const bombExplosionAudio = document.querySelector('#bomb-explosion')
+  const alienKillAudio = document.querySelector('#alien-kill')
+
   let alienContainer
   let bunkerContainer
   let gunStep
@@ -153,7 +158,9 @@ function setUp() {
             updateScore('alienKill')
           }
           battleField.removeChild(bullet)
-          clearInterval(bulletTimer)  
+          clearInterval(bulletTimer)
+          alienKillAudio.src = 'assets/alien-kill.mp3'
+          alienKillAudio.play()
         }
       })
       bunkers.map(bunker => {
@@ -203,10 +210,14 @@ function setUp() {
         clearInterval(bombTimer)
         battleField.removeChild(bomb)
         updateScore('gunnerHit')
+        bombExplosionAudio.src = 'assets/bomb-explosion.mp3'
+        bombExplosionAudio.play()
       } else if (bombY >= battleField.scrollHeight - bomb.offsetHeight) {
         clearInterval(bombTimer)
         battleField.removeChild(bomb)
         updateScore('cityHit')
+        bombExplosionAudio.src = 'assets/bomb-explosion.mp3'
+        bombExplosionAudio.play()
       } else {
         bombY += 0.003 * battleField.scrollHeight
         bomb.style.top = `${bombY}px`
@@ -228,6 +239,8 @@ function setUp() {
     if (player.ammo > 0) {
       createBullet()
       player['ammo']--
+      falconBlastAudio.src = 'assets/laser-blast.mp3'
+      falconBlastAudio.play()
     } else {
       console.log('YOU\'RE OUT of AMMO!!!')
     }
@@ -248,6 +261,8 @@ function setUp() {
     if ([true, false][Math.floor(Math.random() * 2)]) {
       const chosenAlien = aliens[Math.floor(Math.random() * aliens.length)]
       createBomb(chosenAlien)
+      bombDropAudio.src = 'assets/bomb-launch.mp3'
+      bombDropAudio.play()
     }
   }
 

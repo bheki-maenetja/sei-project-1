@@ -113,13 +113,17 @@ main {
 }
 
 .game-board p {
-  align-self: flex-start;
   text-align: center;
   font-family: 'Ubuntu', sans-serif;
   font-weight: 500;
   color: white;
   text-shadow: 1px 1px black;
   margin: 5px;
+}
+
+.game-board[id='player-stats'] > p, .game-board[id='score-board'] > p {
+  align-self: flex-start;
+  text-align: left;
 }
 
 .alien-container {
@@ -207,4 +211,35 @@ main {
 
 .fixed-bunker {
   position: absolute;
+}
+
+/* Media Queries */
+
+@media screen and (max-width: 750px) {
+  main {
+    flex-direction: column;
+    justify-content: center;
+    height: 90vh;
+  }
+
+  header {
+    height: 10vh;
+  }
+
+  .game-board[id='score-board'] {
+    padding: 0px;
+    min-height: 0;
+    height: fit-content;
+    max-width: 100%;
+    width: 500px;
+    margin-top: 10px;
+  }
+
+  .container {
+    height: 65%;
+  }
+
+  .bomb, .alien, .mothership, .bunker, .gunner {
+    background-size: 100% 100%;
+  }
 }
