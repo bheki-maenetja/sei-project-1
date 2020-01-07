@@ -78,6 +78,7 @@ function setUp() {
   const timer = document.querySelector('#game-timer')
   const lifeCount = document.querySelector('#life-count')
   const ammoCount = document.querySelector('#ammo-count')
+  const waveCount = document.querySelector('#wave-count')
 
   const playerFinalScore = document.querySelector('#final-score')
   const finalGameTime = document.querySelector('#game-time')
@@ -275,6 +276,8 @@ function setUp() {
     aliens = aliens.concat(newAlienWave)
 
     player['wavesFought']--
+    const ordinals = ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th']
+    waveCount.innerHTML = ordinals[diffSetting.numWaves - player.wavesFought - 1] + ' wave'
   }
 
   function addMotherShip() {
@@ -289,6 +292,7 @@ function setUp() {
     aliens.push(motherShip)
     motherShipInPlay = true
     player['wavesFought']--
+    waveCount.innerHTML = 'MOTHERSHIP'
   }
 
   function addBunkers(numBunkers, bunkerStrength) {
