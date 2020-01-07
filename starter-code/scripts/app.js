@@ -64,6 +64,7 @@ function setUp() {
   const startBtn = document.querySelector('#start')
   const homeBtn = document.querySelectorAll('.go-home')
   const statsBtn = document.querySelector('#stats')
+  const gameExplainBtn = document.querySelector('#go-explainer')
   const playAgainBtn = document.querySelector('#play-again')
   const diffSelector = document.querySelector('select')
 
@@ -71,6 +72,7 @@ function setUp() {
   const gameOverDiv = document.querySelector('#game-over')
   const statsBoardDiv = document.querySelector('#player-stats') 
   const scoreBoard = document.querySelector('#score-board')
+  const gameExplainerdiv = document.querySelector('#game-explainer')
   const battleField = document.querySelector('div.container')
 
   const playerCurrentScore = document.querySelector('#current-score')
@@ -348,7 +350,7 @@ function setUp() {
   function setHTML() {
     homeDiv.style.display = 'none'
     gameOverDiv.style.display = 'none'
-    scoreBoard.style.display = 'initial'
+    scoreBoard.style.display = 'flex'
     playerCurrentScore.innerHTML = 0
     timer.innerHTML = 0
     populationCount.innerHTML = player.cityPopulation
@@ -505,7 +507,7 @@ function setUp() {
   }
 
   function goGameOver() {
-    gameOverDiv.style.display = 'initial'
+    gameOverDiv.style.display = 'flex'
     playerFinalScore.innerHTML = player['currentScore']
     scoreBoard.style.display = 'none'
     playerHighScore.forEach(item => item.innerHTML = localStorage.highScore)
@@ -515,15 +517,21 @@ function setUp() {
   function goHome() {
     statsBoardDiv.style.display = 'none'
     gameOverDiv.style.display = 'none'
-    homeDiv.style.display = 'initial'
+    gameExplainerdiv.style.display = 'none'
+    homeDiv.style.display = 'flex'
   }
 
   function goStats() {
     homeDiv.style.display = 'none'
-    statsBoardDiv.style.display = 'initial'
+    statsBoardDiv.style.display = 'flex'
     for (let i = 0; i < gamePlayStats.length; i++) {
       gameStats[i].innerHTML = localStorage[gamePlayStats[i]]
     }
+  }
+
+  function goExplainer() {
+    homeDiv.style.display = 'none'
+    gameExplainerdiv.style.display = 'flex'
   }
 
   // Event Handlers
@@ -548,6 +556,7 @@ function setUp() {
   playAgainBtn.addEventListener('click', startGame)
   homeBtn.forEach(Btn => Btn.addEventListener('click', goHome))
   statsBtn.addEventListener('click', goStats)
+  gameExplainBtn.addEventListener('click', goExplainer)
 
   window.addEventListener('keydown', keyDownHandler)
   window.addEventListener('keyup', keyUpHandler)
@@ -556,6 +565,7 @@ function setUp() {
   gameOverDiv.style.display = 'none'
   scoreBoard.style.display = 'none'
   statsBoardDiv.style.display = 'none'
+  gameExplainerdiv.style.display = 'none'
 }
 
 window.addEventListener('DOMContentLoaded', setUp)

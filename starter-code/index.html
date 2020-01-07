@@ -4,23 +4,31 @@
     <meta charset="utf-8">
     <title>WDI Project 1 --- Space Invaders</title>
     <link rel="stylesheet" href="styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Inknut+Antiqua:300,400,500,600,700,800,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu:300,300i,400,400i,500,500i,700,700i&display=swap" rel="stylesheet">
     <script src="scripts/app.js"></script>
   </head>
   <body>
+    <header>
+      <img src="assets/star-wars-logo.svg.png" alt="star wars logo">
+      <h1>SPACE INVADERS</h1>
+    </header>
     <main>
       <div class="container">
         <div id="home" class="game-board">
           <h2>Home</h2>
-          <a href="#" id="start">Start</a>
           <form>
+            <p>Choose Difficulty:</p>
             <select>
-              <option value="1">Difficulty (Easy)</option>
-              <option value="2">Difficulty (Medium)</option>
-              <option value="3">Difficulty (Hard)</option>
+              <option value="1">Baby Yoda</option>
+              <option value="2">Stormtrooper</option>
+              <option value="3">Mandolorian</option>
             </select>
           </form>
-          <a href="#" id="stats">Stats</a>
+          <a href="#" id="start">Start</a>
           <p>High Score: <span class="high-score"></span></p>
+          <a href="#" id="stats">Stats</a>
+          <a href="#" id="go-explainer">How to Play</a>
         </div>
         <div id="game-over" class="game-board">
           <h2>Game Over</h2>
@@ -44,7 +52,23 @@
           <p>Total Ammo Used: <span class='game-stat'></span></p>
           <p>Total Lives Lost: <span class='game-stat'></span></p>
           <p>Total Population Loss: <span class='game-stat'></span></p>
-          <p>Total time spent playing game: <span class='game-stat'></span>s</p>
+          <p>Time spent playing game: <span class='game-stat'></span>s</p>
+          <a href="#" class="go-home">Home</a>
+        </div>
+        <div id="game-explainer" class="game-board">
+          <h2>How to Play</h2>
+          <h3>Gamplay</h3>
+          <p>
+            Move your ship with the left and right arrow keys.
+            Press the spacebar to fire your gun.
+          </p>
+          <h3>Mission</h3>
+          <p>
+            Elimate all enemy ships before they destroy the planet. 
+            Each bomb they drop will kill thousands of people
+            and if you get hit you'll lose a life!
+            Your mission is to protect the Republic at all costs!!!
+          </p>
           <a href="#" class="go-home">Home</a>
         </div>
       </div>
