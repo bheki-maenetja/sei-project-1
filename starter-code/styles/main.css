@@ -151,7 +151,7 @@ main {
   width: 7%;
   height: 6%;
   background-image: url('../assets/millennium-falcon.png');
-  background-size: cover;
+  background-size: 100% 100%;
   position: absolute;
   left: 45%;
   top: 90%;
@@ -180,7 +180,7 @@ main {
   height: 9%;
   margin-top: 5px;
   background-image: url('../assets/stormtrooper.png');
-  background-size: cover;
+  background-size: 100% 100%;
 }
 
 .fixed-alien {
@@ -193,7 +193,7 @@ main {
   height: 18%;
   margin-top: 5px;
   background-image: url('../assets/darth-vader.png');
-  background-size: cover;
+  background-size: 100% 100%;
   margin: 5px auto
 }
 
@@ -206,7 +206,7 @@ main {
   width: 15%;
   height: 100%;
   background-image: url('../assets/metal-block.png');
-  background-size: cover;
+  background-size: 100% 100%;
 }
 
 .fixed-bunker {
@@ -216,14 +216,15 @@ main {
 /* Media Queries */
 
 @media screen and (max-width: 750px) {
-  main {
-    flex-direction: column;
-    justify-content: center;
-    height: 90vh;
+  header {
+    height: 15vh;
   }
 
-  header {
-    height: 10vh;
+  main {
+    padding: 15px 0;
+    flex-direction: column;
+    justify-content: center;
+    height: 85vh;
   }
 
   .game-board[id='score-board'] {
@@ -236,10 +237,7 @@ main {
   }
 
   .container {
-    height: 65%;
-  }
-
-  .bomb, .alien, .mothership, .bunker, .gunner {
-    background-size: 100% 100%;
+    height: 0;
+    flex-grow: 1;
   }
 }
