@@ -66,7 +66,8 @@ function setUp() {
   const statsBtn = document.querySelector('#stats')
   const gameExplainBtn = document.querySelector('#go-explainer')
   const playAgainBtn = document.querySelector('#play-again')
-  const diffSelector = document.querySelector('select')
+  const quitGameBtn = document.querySelector('#quit-game')
+  const diffSelector = document.querySelector('.diff-selector')
 
   const homeDiv = document.querySelector('#home')
   const gameOverDiv = document.querySelector('#game-over')
@@ -230,7 +231,8 @@ function setUp() {
     } else {
       console.log('YOU\'RE OUT of AMMO!!!')
     }
-    ammoCount.innerHTML = player.ammo > 0 ? player.ammo : 'OUT OF AMMO'
+    if (player.ammo > 0) ammoCount.innerHTML = `Remaining Ammo: ${player.ammo}`
+    else ammoCount.innerHTML = 'OUT OF AMMO!!!'
   }
 
   function createBomb(alien) {
@@ -265,7 +267,7 @@ function setUp() {
       alien.classList.add('alien')
       newAlienWave[i] = alien
       alienContainer.appendChild(alien)
-      alien.style.backgroundColor = ['yellow', 'green', 'red', 'blue', 'lime', 'cyan', 'violet'][Math.floor(Math.random() * 7)]
+      // alien.style.backgroundColor = ['yellow', 'green', 'red', 'blue', 'lime', 'cyan', 'violet'][Math.floor(Math.random() * 7)]
     }
 
     newAlienWave.forEach(item => {
@@ -355,7 +357,7 @@ function setUp() {
     timer.innerHTML = 0
     populationCount.innerHTML = player.cityPopulation
     lifeCount.innerHTML = player.lives
-    ammoCount.innerHTML = player.ammo
+    ammoCount.innerHTML = `Remaining ammo: ${player.ammo}`
   }
 
   function setPlayer() {
@@ -460,7 +462,6 @@ function setUp() {
     timer.innerHTML = 0
     populationCount.innerHTML = 0
     lifeCount.innerHTML = 0
-
   }
 
   function resetGame() {
@@ -515,6 +516,7 @@ function setUp() {
   }
 
   function goHome() {
+    scoreBoard.style.display = 'none'
     statsBoardDiv.style.display = 'none'
     gameOverDiv.style.display = 'none'
     gameExplainerdiv.style.display = 'none'
@@ -532,6 +534,13 @@ function setUp() {
   function goExplainer() {
     homeDiv.style.display = 'none'
     gameExplainerdiv.style.display = 'flex'
+  }
+
+  function quitGame() {
+    clearBattleField()
+    resetGame()
+    resetHTML()
+    goHome()
   }
 
   // Event Handlers
@@ -557,6 +566,7 @@ function setUp() {
   homeBtn.forEach(Btn => Btn.addEventListener('click', goHome))
   statsBtn.addEventListener('click', goStats)
   gameExplainBtn.addEventListener('click', goExplainer)
+  quitGameBtn.addEventListener('click', quitGame)
 
   window.addEventListener('keydown', keyDownHandler)
   window.addEventListener('keyup', keyUpHandler)

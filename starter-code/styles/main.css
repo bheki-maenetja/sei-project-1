@@ -13,19 +13,19 @@ body {
 header {
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: center;
   align-items: center;
   height: 20vh;
 }
 
 header img {
-  max-height: 80px;
+  max-height: 100%;
 }
 
 header > h1 {
   color: white;
   text-shadow: 2px 2px navy;
-  font-family: 'Inknut Antiqua', serif;
+  font-family: 'Ubuntu', sans-serif;
   font-weight: 900;
 }
 
@@ -44,7 +44,7 @@ main {
   justify-content: center;
   width: 500px;
   height: 95%;
-  border: 5px solid yellow;
+  border: 2px solid dodgerblue;
   position: relative;
 }
 
@@ -78,25 +78,38 @@ main {
   flex-direction: column;
 }
 
+.diff-selector {
+  background-color: darkblue;
+  color: white;
+  font-family: 'Ubuntu', sans-serif;
+  font-weight: 500;
+  border: none;
+  height: 25px;
+}
+
+.diff-selector:focus {
+  outline: none;
+}
+
 .game-board > a {
   text-decoration: none;
   align-self: center;
   padding: 5px;
-  border: 2px solid white;
+  border: 2px solid cyan;
   border-radius: 5px;
   font-family: 'Ubuntu', sans-serif;
   font-size: 15px;
   font-weight: 500;
   text-align: center;
-  background-color: deepskyblue;
-  color: white;
+  background-color: darkblue;
+  color: cyan;
   width: 95%;
 }
 
 .game-board > a:hover {
-  background-color: white;
-  color: dodgerblue;
-  border-color: blue;
+  background-color: cyan;
+  color: darkblue;
+  border-color: darkblue;
 }
 
 .game-board p {
@@ -116,7 +129,7 @@ main {
   align-content: flex-start;
   width: 50%;
   height: 65%;
-  border: 1px solid black;
+  border: 1px solid transparent;
   position: relative;
 }
 
@@ -132,25 +145,28 @@ main {
 /* Gameplay Objects */
 .gunner {
   width: 7%;
-  height: 5%;
-  background-color: red;
+  height: 6%;
+  background-image: url('../assets/millennium-falcon.png');
+  background-size: cover;
   position: absolute;
   left: 45%;
   top: 90%;
 }
 
 .bullet {
-  width: 2%;
+  width: 1%;
   height: 4%;
-  background-color: grey;
-  border-radius: 100% 100% 0 0;
+  background-color: cyan;
+  box-shadow: 0px 0px 10px 10px blue;
+  border-radius: 100px 100px 0 0;
   position: absolute;
 }
 
 .bomb {
   width: 3%;
   height: 4%;
-  background-color: purple;
+  background-color: orangered;
+  box-shadow: 0px 0px 10px 2px red;
   border-radius: 0 0 100% 100%;
   position: absolute;
 }
@@ -158,8 +174,9 @@ main {
 .alien {
   width: 17%;
   height: 9%;
-  border-radius: 100%;
   margin-top: 5px;
+  background-image: url('../assets/stormtrooper.png');
+  background-size: cover;
 }
 
 .fixed-alien {
@@ -171,7 +188,8 @@ main {
   width: 34%;
   height: 18%;
   margin-top: 5px;
-  background-color: lime;
+  background-image: url('../assets/darth-vader.png');
+  background-size: cover;
   margin: 5px auto
 }
 
@@ -183,8 +201,8 @@ main {
 .bunker {
   width: 15%;
   height: 100%;
-  background-color: lightgray;
-  border-radius: 15px;
+  background-image: url('../assets/metal-block.png');
+  background-size: cover;
 }
 
 .fixed-bunker {

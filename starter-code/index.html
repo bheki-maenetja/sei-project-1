@@ -4,14 +4,12 @@
     <meta charset="utf-8">
     <title>WDI Project 1 --- Space Invaders</title>
     <link rel="stylesheet" href="styles/main.css">
-    <link href="https://fonts.googleapis.com/css?family=Inknut+Antiqua:300,400,500,600,700,800,900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Ubuntu:300,300i,400,400i,500,500i,700,700i&display=swap" rel="stylesheet">
     <script src="scripts/app.js"></script>
   </head>
   <body>
     <header>
-      <img src="assets/star-wars-logo.svg.png" alt="star wars logo">
-      <h1>SPACE INVADERS</h1>
+      <img src="assets/star-wars-logo.png" alt="star wars logo">
     </header>
     <main>
       <div class="container">
@@ -19,7 +17,7 @@
           <h2>Home</h2>
           <form>
             <p>Choose Difficulty:</p>
-            <select>
+            <select class="diff-selector">
               <option value="1">Baby Yoda</option>
               <option value="2">Stormtrooper</option>
               <option value="3">Mandolorian</option>
@@ -77,9 +75,10 @@
         <p>Score: <span id="current-score"></span></p>
         <p>Timer: <span id="game-timer"></span>s</p>
         <p>Lives remaining: <span id="life-count"></span></p>
-        <p>Remaining ammo: <span id="ammo-count"></span></p>
+        <p id="ammo-count"></p>
         <p>Population: <span id="population-count"></span></p>
         <p id="wave-count"></p>
+        <a href="#" id="quit-game">Quit Game</a>
       </div>
     </main>
   </body>
