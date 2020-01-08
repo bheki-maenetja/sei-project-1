@@ -103,6 +103,7 @@ function setUp() {
 
   let alienContainer
   let bunkerContainer
+  let citySkyline
   let gunStep
   let alienStep
   let gunner
@@ -216,7 +217,7 @@ function setUp() {
         clearInterval(bombTimer)
         battleField.removeChild(bomb)
         updateScore('gunnerHit')
-        bombExplosionAudio.src = 'assets/bomb-explosion.mp3'
+        bombExplosionAudio.src = 'assets/bomb-hit.mp3'
         bombExplosionAudio.play()
       } else if (bombY >= battleField.scrollHeight - bomb.offsetHeight) {
         clearInterval(bombTimer)
@@ -353,9 +354,13 @@ function setUp() {
     addBunkers(diffSetting.numBunkers, diffSetting.bunkerStrength)
     addGunner()
     aliens.forEach(item => item.addEventListener('click', () => console.log(item.offsetTop)))
+    citySkyline = document.createElement('div')
+    battleField.appendChild(citySkyline)
+    citySkyline.classList.add('city-skyline')
   }
 
   function clearBattleField() {
+    battleField.removeChild(citySkyline)
     battleField.removeChild(alienContainer)
     battleField.removeChild(bunkerContainer)
     battleField.removeChild(gunner)
@@ -488,7 +493,6 @@ function setUp() {
     timer.innerHTML = 0
     populationCount.innerHTML = 0
     lifeCount.innerHTML = 0
-    mainThemeAudio.src = 'assets/star-wars-main-theme.mp3'
     mainThemeAudio.play()
   }
 
@@ -502,8 +506,25 @@ function setUp() {
     resetDomVars()
   }
 
+  function getResult() {
+    let returnString
+    if (aliens.length === 0 && player.wavesFought < 0) {
+      returnString = 'VICTORY!!!\nYou defeated the empire!'
+      mainThemeAudio.src = 'assets/star-wars-main-theme.mp3'
+      return [true, returnString]
+    } else if (player.lives === 0) {
+      returnString = 'DEFEAT\nYou were killed'
+    } else if (player.cityPopulation === 0) {
+      returnString = 'DEFEAT\nThe Republic was destroyed'
+    }
+    mainThemeAudio.src = 'assets/imperial-march.mp3'
+    return [false, returnString] 
+  }
+
   function updateStats() {
     localStorage.gamesPlayed = parseInt(localStorage.gamesPlayed) + 1
+    if (getResult()[0]) localStorage.wins = parseInt(localStorage.wins) + 1
+    else localStorage.losses = parseInt(localStorage.losses) + 1
     if (player['currentScore'] > parseInt(localStorage.highScore)) localStorage.highScore = player['currentScore']
     localStorage.totalScore = parseInt(localStorage.totalScore) + player.currentScore
     localStorage.alienKills = parseInt(localStorage.alienKills) + player.alienKills
@@ -516,16 +537,6 @@ function setUp() {
     console.log(localStorage)
   }
 
-  function getResult() {
-    if (aliens.length === 0 && player.wavesFought < 0) {
-      gameResult.innerHTML = 'YOU WON!!!'
-      localStorage.wins = parseInt(localStorage.wins) + 1
-    } else {
-      gameResult.innerHTML = 'YOU LOST'
-      localStorage.losses = parseInt(localStorage.losses) + 1
-    } 
-  }
-
   function gameOver() {
     getResult()
     clearBattleField()
@@ -536,6 +547,7 @@ function setUp() {
   }
 
   function goGameOver() {
+    gameResult.innerHTML = getResult()[1]
     gameOverDiv.style.display = 'flex'
     playerFinalScore.innerHTML = player['currentScore']
     scoreBoard.style.display = 'none'
@@ -567,6 +579,7 @@ function setUp() {
   function quitGame() {
     clearBattleField()
     resetGame()
+    mainThemeAudio.src = 'assets/star-wars-main-theme.mp3'
     resetHTML()
     goHome()
   }
@@ -609,7 +622,6 @@ function setUp() {
   window.addEventListener('keyup', keyUpHandler)
 
   // Other
-  
   gameOverDiv.style.display = 'none'
   scoreBoard.style.display = 'none'
   statsBoardDiv.style.display = 'none'
