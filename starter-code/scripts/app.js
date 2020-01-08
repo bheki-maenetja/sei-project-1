@@ -61,6 +61,11 @@ function setUp() {
   let alienX = null
   let direction = true
 
+  const header = document.querySelector('header')
+  const main = document.querySelector('main')
+  const titleScreen = document.querySelector('.title-screen')
+
+  const titleScreenStartBtn = document.querySelector('#title-screen-start')
   const startBtn = document.querySelector('#start')
   const homeBtn = document.querySelectorAll('.go-home')
   const statsBtn = document.querySelector('#stats')
@@ -94,6 +99,7 @@ function setUp() {
   const bombDropAudio = document.querySelector('#bomb-drop')
   const bombExplosionAudio = document.querySelector('#bomb-explosion')
   const alienKillAudio = document.querySelector('#alien-kill')
+  const mainThemeAudio = document.querySelector('#main-theme')
 
   let alienContainer
   let bunkerContainer
@@ -312,6 +318,9 @@ function setUp() {
     motherShipInPlay = true
     player['wavesFought']--
     waveCount.innerHTML = 'MOTHERSHIP'
+
+    mainThemeAudio.src = 'assets/imperial-march.mp3'
+    mainThemeAudio.play()
   }
 
   function addBunkers(numBunkers, bunkerStrength) {
@@ -395,6 +404,8 @@ function setUp() {
     setUpGame()
     alienMoveTimer = setInterval(moveAliens, 1)
     gameTimer = setInterval(playGame, 1000)
+    mainThemeAudio.src = 'assets/heat-of-battle.mp3'
+    mainThemeAudio.play()
   }
 
   function playGame() {
@@ -477,6 +488,8 @@ function setUp() {
     timer.innerHTML = 0
     populationCount.innerHTML = 0
     lifeCount.innerHTML = 0
+    mainThemeAudio.src = 'assets/star-wars-main-theme.mp3'
+    mainThemeAudio.play()
   }
 
   function resetGame() {
@@ -558,6 +571,14 @@ function setUp() {
     goHome()
   }
 
+  function loadGame() {
+    header.style.display = 'flex'
+    main.style.display = 'flex'
+    titleScreen.style.display = 'none'
+    mainThemeAudio.src = 'assets/star-wars-opening-theme.mp3'
+    mainThemeAudio.play()
+  }
+
   // Event Handlers
   function keyDownHandler(e) {
     if (isGameOver) {
@@ -576,6 +597,7 @@ function setUp() {
   }
 
   // Event Listeners
+  titleScreenStartBtn.addEventListener('click', loadGame)
   startBtn.addEventListener('click', startGame)
   playAgainBtn.addEventListener('click', startGame)
   homeBtn.forEach(Btn => Btn.addEventListener('click', goHome))
@@ -587,10 +609,13 @@ function setUp() {
   window.addEventListener('keyup', keyUpHandler)
 
   // Other
+  
   gameOverDiv.style.display = 'none'
   scoreBoard.style.display = 'none'
   statsBoardDiv.style.display = 'none'
   gameExplainerdiv.style.display = 'none'
+  header.style.display = 'none'
+  main.style.display = 'none'
 }
 
 window.addEventListener('DOMContentLoaded', setUp)
