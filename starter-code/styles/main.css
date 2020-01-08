@@ -9,7 +9,7 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-image: url('../assets/space-background.jpg');
+  background-image: url('../assets/star-wars-wallpaper.jpg');
   background-size: cover;
 }
 
@@ -126,8 +126,8 @@ main {
   color: white;
   font-family: 'Ubuntu', sans-serif;
   font-weight: 500;
-  border: none;
-  height: 25px;
+  border: 2px solid cyan;
+  height: 25px;  
 }
 
 .diff-selector:focus {

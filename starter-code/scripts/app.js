@@ -3,13 +3,13 @@ function setUp() {
   
   // Game Variables
   const player = {
-    currentScore: null,
-    lives: null,
-    ammo: null,
-    cityPopulation: null,
-    wavesFought: null,
-    alienKills: null,
-    motherShipKills: null
+    currentScore: 0,
+    lives: 0,
+    ammo: 0,
+    cityPopulation: 0,
+    wavesFought: 0,
+    alienKills: 0,
+    motherShipKills: 0
   }
 
   let isGameOver = true
@@ -27,7 +27,7 @@ function setUp() {
     numBunkers: 3,
     bunkerStrength: 3,
     playerLives: 5,
-    playerAmmo: 65,
+    playerAmmo: 75,
     populationHit: 1000,
     motherShipsLives: 5
   }, {
@@ -36,7 +36,7 @@ function setUp() {
     numBunkers: 2,
     bunkerStrength: 6,
     playerLives: 3,
-    playerAmmo: 130,
+    playerAmmo: 150,
     populationHit: 2000,
     motherShipsLives: 10
   }, {
@@ -45,7 +45,7 @@ function setUp() {
     numBunkers: 1,
     bunkerStrength: 9,
     playerLives: 1,
-    playerAmmo: 290,
+    playerAmmo: 300,
     populationHit: 4000,
     motherShipsLives: 15
   }]
@@ -318,7 +318,7 @@ function setUp() {
     aliens.push(motherShip)
     motherShipInPlay = true
     player['wavesFought']--
-    waveCount.innerHTML = 'MOTHERSHIP'
+    waveCount.innerHTML = 'DARTH VADER'
 
     mainThemeAudio.src = 'assets/imperial-march.mp3'
     mainThemeAudio.play()
@@ -417,7 +417,7 @@ function setUp() {
     clearInterval(gameOverTimer)
     gameClock++
     timer.innerHTML = gameClock
-    if (player.wavesFought === 0 && !motherShipInPlay && aliens.every(item => item.offsetTop > 0.6 * alienContainer.scrollHeight)) addMotherShip()
+    if (player.wavesFought === 0 && !motherShipInPlay && aliens.every(item => item.offsetTop > 0.3 * alienContainer.scrollHeight)) addMotherShip()
     if (aliens.every(item => item.offsetTop > 0.6 * alienContainer.scrollHeight) && !motherShipInPlay) addAliens(diffSetting.waveSize)
     dropBombs()
     // console.log('Playing the GAME!')
@@ -460,7 +460,7 @@ function setUp() {
   }
 
   function resetPlayer() {
-    Object.keys(player).map(key => player[key] = null)
+    Object.keys(player).map(key => player[key] = 0)
   }
 
   function resetTimers() {
