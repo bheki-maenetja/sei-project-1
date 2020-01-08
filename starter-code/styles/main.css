@@ -191,9 +191,9 @@ main {
 
 /* Gameplay Objects */
 .gunner {
-  width: 7%;
-  height: 6%;
-  background-image: url('../assets/millennium-falcon.png');
+  width: 9%;
+  height: 7%;
+  background-image: url('../assets/baby-yoda.png');
   background-size: 100% 100%;
   position: absolute;
   left: 45%;

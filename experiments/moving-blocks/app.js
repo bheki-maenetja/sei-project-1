@@ -105,12 +105,6 @@ function setUp() {
 
   // Event Listeners
   window.addEventListener('keydown', keyHandler)
-  window.addEventListener('keyup', (e) => {
-    if (e.keyCode !== 13) {
-      clearInterval(timerID)
-      console.log('timer finished')
-    }
-  })
 }
 
 window.addEventListener('DOMContentLoaded', setUp)

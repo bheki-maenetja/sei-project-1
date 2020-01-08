@@ -1,0 +1,36 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+header {
+  display: flex;
+  height: 10vh;
+}
+
+main {
+  height: 90vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* THE GRID */
+div.the-grid {
+  display: flex;
+  flex-wrap: wrap-reverse;
+}
+
+div.grid-item {
+  width: 50px;
+  height: 50px;
+  border: 1px dotted black;
+}
+
+div.grid-item.player {
+  background-image: url('assets/baby-yoda.png');
+  background-size: 100% 100%;
+}
