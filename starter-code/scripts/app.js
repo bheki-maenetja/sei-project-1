@@ -62,7 +62,7 @@ function setUp() {
   // Timer Variables
   let gameTimer = null
   let gameOverTimer = null
-  let gunTimer = null
+  let gunMoveTimer = null
   let alienMoveTimer = null
 
   // DOM Variables
@@ -129,9 +129,9 @@ function setUp() {
     gunX = gunner.offsetLeft
     gunStep = 0.01 * mainContainer.scrollWidth
     if (charCode === 39) {
-      gunner.offsetLeft + gunStep > mainContainer.scrollWidth - gunner.offsetWidth ? clearInterval(gunTimer) : gunX += gunStep
+      gunner.offsetLeft + gunStep > mainContainer.scrollWidth - gunner.offsetWidth ? clearInterval(gunMoveTimer) : gunX += gunStep
     } else if (charCode === 37) {
-      gunner.offsetLeft - gunStep <= 0 ? clearInterval(gunTimer) : gunX -= gunStep
+      gunner.offsetLeft - gunStep <= 0 ? clearInterval(gunMoveTimer) : gunX -= gunStep
     }
     gunner.style.left = `${gunX}px`
   }
@@ -172,13 +172,15 @@ function setUp() {
               alienContainer.removeChild(alien)
               aliens.splice(aliens.indexOf(alien), 1)
               updateScore('motherShipKill')
+              updateAudio('motherShipKill')
+            } else {
+              updateAudio('alienKill')
             }
-            alienKillAudio.src = 'assets/alien-kill.mp3'
-            alienKillAudio.play()
           } else {
             alienContainer.removeChild(alien)
             aliens.splice(aliens.indexOf(alien), 1)
             updateScore('alienKill')
+            updateAudio('alienKill')
           }
           mainContainer.removeChild(bullet)
           clearInterval(bulletTimer)
@@ -220,8 +222,7 @@ function setUp() {
     if (player.ammo > 0) {
       createBullet()
       player['ammo']--
-      laserBlastAudio.src = 'assets/laser-blast.mp3'
-      laserBlastAudio.play()
+      updateAudio('laserBlast')
     } else {
       console.log('YOU\'RE OUT of AMMO!!!')
     }
@@ -253,10 +254,12 @@ function setUp() {
         clearInterval(bombTimer)
         mainContainer.removeChild(bomb)
         updateScore('gunnerHit')
+        updateAudio('gunnerHit')
       } else if (bombY >= mainContainer.scrollHeight - bomb.offsetHeight) {
         clearInterval(bombTimer)
         mainContainer.removeChild(bomb)
         updateScore('cityHit')
+        updateAudio('cityHit')
       } else {
         bombY += 0.003 * mainContainer.scrollHeight
         bomb.style.top = `${bombY}px`
@@ -277,8 +280,7 @@ function setUp() {
     if (bombCondition[Math.floor(Math.random() * bombCondition.length)]) {
       const chosenAlien = aliens[Math.floor(Math.random() * aliens.length)]
       createBomb(chosenAlien)
-      bombDropAudio.src = 'assets/bomb-launch.mp3'
-      bombDropAudio.play()
+      updateAudio('bombDrop')
     }
   }
 
@@ -359,8 +361,7 @@ function setUp() {
     player['wavesFought']--
     waveCountSpan.innerHTML = 'DARTH VADER'
 
-    mainThemeAudio.src = 'assets/imperial-march.mp3'
-    mainThemeAudio.play()
+    updateAudio('motherShip')
   }
 
   function setBattleField() {
@@ -420,6 +421,7 @@ function setUp() {
     setPlayer()
     setHTML()
     setBattleField()
+    updateAudio('heatOfBattle')
   }
 
   // Game Start & Play
@@ -428,8 +430,6 @@ function setUp() {
     setUpGame()
     alienMoveTimer = setInterval(moveAliens, 1)
     gameTimer = setInterval(playGame, 1000)
-    mainThemeAudio.src = 'assets/heat-of-battle.mp3'
-    mainThemeAudio.play()
   }
   
   function playGame() {
@@ -449,8 +449,6 @@ function setUp() {
         player['currentScore'] += 100
         player['alienKills']++
         console.log('Alien Kill!!!\nScore:', player['currentScore'])
-        alienKillAudio.src = 'assets/alien-kill.mp3'
-        alienKillAudio.play()
         break
       case 'motherShipKill':
         player['currentScore'] += motherShipLife === 0 ? 500 : 0
@@ -460,14 +458,10 @@ function setUp() {
       case 'cityHit':
         player['cityPopulation'] -= diffSetting.populationHit
         console.log('City hit!\nPopulation Remaining:', player['cityPopulation'])
-        bombExplosionAudio.src = 'assets/bomb-explosion.mp3'
-        bombExplosionAudio.play()
         break
       case 'gunnerHit':
         player['lives']--
         console.log(`You've been hit!\nLives remaining: ${player['lives']}`)
-        bombExplosionAudio.src = 'assets/bomb-hit.mp3'
-        bombExplosionAudio.play()
         break
       default:
         break
@@ -497,11 +491,11 @@ function setUp() {
   }
 
   function resetTimers() {
-    clearInterval(gunTimer)
+    clearInterval(gunMoveTimer)
     clearInterval(gameTimer)
     clearInterval(alienMoveTimer)
     clearInterval(gameOverTimer)
-    gunTimer = null
+    gunMoveTimer = null
     gameTimer = null
     gameOverTimer = null
     alienMoveTimer = null
@@ -540,17 +534,16 @@ function setUp() {
     let returnString
     if (aliens.length === 0 && player.wavesFought < 0) {
       returnString = 'VICTORY!!!\nYou defeated the empire!'
-      mainThemeAudio.src = 'assets/star-wars-main-theme.mp3'
-      mainThemeAudio.play()
       gameResult = [true, returnString]
+      updateAudio('victory')
       return
     } else if (player.lives === 0) {
       returnString = 'DEFEAT\nYou were killed'
     } else if (player.cityPopulation === 0) {
       returnString = 'DEFEAT\nThe Republic was destroyed'
     }
-    mainThemeAudio.src = 'assets/imperial-march.mp3'
     gameResult = [false, returnString] 
+    updateAudio('defeat')
   }
 
   function updateStats() {
@@ -612,18 +605,70 @@ function setUp() {
   function quitGame() {
     clearBattleField()
     resetGame()
-    mainThemeAudio.src = 'assets/imperial-march.mp3'
+    updateAudio('quit')
     resetHTML()
     goHome()
   }
+
+  // Audio Handler
+  function updateAudio(event) {
+    switch (event) {
+      case 'gameLoad':
+        mainThemeAudio.src = 'assets/star-wars-opening-theme.mp3'
+        mainThemeAudio.play()
+        break
+      case 'heatOfBattle':
+        mainThemeAudio.src = 'assets/heat-of-battle.mp3'
+        mainThemeAudio.play()
+        break
+      case 'motherShip':
+        mainThemeAudio.src = 'assets/imperial-march.mp3'
+        mainThemeAudio.play()
+        break
+      case 'victory':
+        mainThemeAudio.src = 'assets/star-wars-main-theme.mp3'
+        break
+      case 'defeat':
+        mainThemeAudio.src = 'assets/imperial-march.mp3'
+        break
+      case 'quit':
+        mainThemeAudio.src = 'assets/imperial-march.mp3'
+        break
+      case 'laserBlast':
+        laserBlastAudio.src = 'assets/laser-blast.mp3'
+        laserBlastAudio.play()
+        break
+      case 'bombDrop':
+        bombDropAudio.src = 'assets/bomb-launch.mp3'
+        bombDropAudio.play()
+        break
+      case 'alienKill':
+        alienKillAudio.src = 'assets/alien-kill.mp3'
+        alienKillAudio.play()
+        break
+      case 'motherShipKill':
+        bombExplosionAudio.src = 'assets/bomb-explosion.mp3'
+        bombExplosionAudio.play()
+        break
+      case 'cityHit':
+        bombExplosionAudio.src = 'assets/bomb-explosion.mp3'
+        bombExplosionAudio.play()
+        break
+      case 'gunnerHit':
+        bombExplosionAudio.src = 'assets/bomb-hit.mp3'
+        bombExplosionAudio.play()
+        break
+      default:
+        break
+    }
+  } 
 
   // Initialisers
   function loadGame() {
     header.style.display = 'flex'
     main.style.display = 'flex'
     titleScreenDiv.style.display = 'none'
-    mainThemeAudio.src = 'assets/star-wars-opening-theme.mp3'
-    mainThemeAudio.play()
+    updateAudio('gameLoad')
   }
 
   function initialHTMLSetUp() {
@@ -642,14 +687,14 @@ function setUp() {
     } else if (e.keyCode === 32) {
       fireBullet()
     } else if ([37,39].includes(e.keyCode)) {
-      clearInterval(gunTimer)
+      clearInterval(gunMoveTimer)
       charCode = e.keyCode
-      gunTimer = setInterval(moveGunner, 12)
+      gunMoveTimer = setInterval(moveGunner, 12)
     }
   }
 
   function keyUpHandler(e) {
-    if (e.keyCode !== 32) clearInterval(gunTimer)
+    if ([37,39].includes(e.keyCode)) clearInterval(gunMoveTimer)
   }
 
   // Event Listeners
