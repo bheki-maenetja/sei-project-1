@@ -12,15 +12,14 @@ function setUp() {
     motherShipKills: 0
   }
 
-  let bombCondition
   let isGameOver = true
-  let motherShipLife
+  let matchResult
   let gameClock = null
-  let diffSetting
   let motherShipInPlay = false
 
-  const gamePlayStats = ['gamesPlayed', 'wins', 'losses','highScore', 'totalScore', 'alienKills', 'motherShipKills', 'wavesFought', 'ammoUsed', 'livesLost', 'populationLoss', 'gameTime']
-  gamePlayStats.forEach(stat => localStorage.setItem(stat, 0))
+  let bombCondition
+  let motherShipLife
+  let diffSetting
 
   const gameDiffSettings = [{
     waveSize: 15,
@@ -57,10 +56,13 @@ function setUp() {
     motherShipsLives: 15
   }]
 
+  const gamePlayStats = ['gamesPlayed', 'wins', 'losses','highScore', 'totalScore', 'alienKills', 'motherShipKills', 'wavesFought', 'ammoUsed', 'livesLost', 'populationLoss', 'gameTime']
+  gamePlayStats.forEach(stat => localStorage.setItem(stat, 0))
+
   // Timer Variables
-  let gunTimer = null
   let gameTimer = null
   let gameOverTimer = null
+  let gunTimer = null
   let alienMoveTimer = null
 
   // DOM Variables
@@ -70,57 +72,59 @@ function setUp() {
 
   const header = document.querySelector('header')
   const main = document.querySelector('main')
-  const titleScreen = document.querySelector('.title-screen')
-
-  const titleScreenStartBtn = document.querySelector('#title-screen-start')
-  const startBtn = document.querySelector('#start')
-  const homeBtn = document.querySelectorAll('.go-home')
-  const statsBtn = document.querySelector('#stats')
-  const gameExplainBtn = document.querySelector('#go-explainer')
-  const playAgainBtn = document.querySelector('#play-again')
-  const quitGameBtn = document.querySelector('#quit-game')
-  const diffSelector = document.querySelector('.diff-selector')
-
-  const homeDiv = document.querySelector('#home')
-  const gameOverDiv = document.querySelector('#game-over')
-  const statsBoardDiv = document.querySelector('#player-stats') 
-  const scoreBoard = document.querySelector('#score-board')
-  const gameExplainerdiv = document.querySelector('#game-explainer')
+  
   const battleField = document.querySelector('div.container')
 
-  const playerCurrentScore = document.querySelector('#current-score')
-  const populationCount = document.querySelector('#population-count')
-  const timer = document.querySelector('#game-timer')
-  const lifeCount = document.querySelector('#life-count')
-  const ammoCount = document.querySelector('#ammo-count')
-  const waveCount = document.querySelector('#wave-count')
+  const titleScreen = document.querySelector('.title-screen')
+  const homeDiv = document.querySelector('#home')
+  const statsBoardDiv = document.querySelector('#player-stats')
+  const gameExplainerdiv = document.querySelector('#game-explainer')
+  const scoreBoard = document.querySelector('#score-board')
+  const gameOverDiv = document.querySelector('#game-over')
+  
+  const titleScreenStartBtn = document.querySelector('#title-screen-start')
+  const homeBtn = document.querySelectorAll('.go-home')
+  const startBtn = document.querySelector('#start')
+  const statsBtn = document.querySelector('#stats')
+  const gameExplainBtn = document.querySelector('#go-explainer')
+  const quitGameBtn = document.querySelector('#quit-game')
+  const playAgainBtn = document.querySelector('#play-again')
 
+  const diffSelector = document.querySelector('.diff-selector')
+  
+  const gameResult = document.querySelector('#game-result')
   const playerFinalScore = document.querySelector('#final-score')
   const finalGameTime = document.querySelector('#game-time')
   const playerHighScore = document.querySelectorAll('.high-score')
-  const gameResult = document.querySelector('#game-result')
-
+  
+  const playerCurrentScore = document.querySelector('#current-score')
+  const timer = document.querySelector('#game-timer')
+  const lifeCount = document.querySelector('#life-count')
+  const populationCount = document.querySelector('#population-count')
+  const ammoCount = document.querySelector('#ammo-count')
+  const waveCount = document.querySelector('#wave-count')
+  
   const gameStats = document.querySelectorAll('.game-stat')
-
+  
   const falconBlastAudio = document.querySelector('#falcon-blast')
   const bombDropAudio = document.querySelector('#bomb-drop')
   const bombExplosionAudio = document.querySelector('#bomb-explosion')
   const alienKillAudio = document.querySelector('#alien-kill')
   const mainThemeAudio = document.querySelector('#main-theme')
 
-  let alienContainer
-  let bunkerContainer
-  let citySkyline
-  let gunStep
+  let aliens
   let alienStep
+  let alienContainer
+  let bunkers 
+  let bunkerContainer
   let gunner
   let gunX
-  let aliens
-  let bunkers 
+  let gunStep
+  let citySkyline
   
   // FUNCTIONS
 
-  // Movement Functions
+  // Alien & Gunner Movements
   function moveGunner() {
     gunX = gunner.offsetLeft
     gunStep = 0.01 * battleField.scrollWidth
@@ -151,6 +155,7 @@ function setUp() {
     alienContainer.style.left = `${alienX}px`
   }
 
+  // Bullets & Bombs
   function moveBullet(bullet) {
     let bulletY = bullet.offsetTop
     const bulletTimer = setInterval(() => {
@@ -202,6 +207,28 @@ function setUp() {
     }, 1)
   }
 
+  function createBullet() {
+    const bullet = document.createElement('div')
+    bullet.classList.add('bullet')
+    battleField.appendChild(bullet)
+    bullet.style.left = `${gunX}px`
+    bullet.style.top = `${gunner.offsetTop}px`
+    moveBullet(bullet)
+  }
+
+  function fireBullet() {
+    if (player.ammo > 0) {
+      createBullet()
+      player['ammo']--
+      falconBlastAudio.src = 'assets/laser-blast.mp3'
+      falconBlastAudio.play()
+    } else {
+      console.log('YOU\'RE OUT of AMMO!!!')
+    }
+    if (player.ammo > 0) ammoCount.innerHTML = `Remaining Ammo: ${player.ammo}`
+    else ammoCount.innerHTML = 'OUT OF AMMO!!!'
+  }
+
   function moveBomb(bomb) {
     let bombY = bomb.offsetTop
     const bombTimer = setInterval(() => {
@@ -237,29 +264,6 @@ function setUp() {
     }, 5)
   }
 
-  // Bullets & Bombs Functions
-  function createBullet() {
-    const bullet = document.createElement('div')
-    bullet.classList.add('bullet')
-    battleField.appendChild(bullet)
-    bullet.style.left = `${gunX}px`
-    bullet.style.top = `${gunner.offsetTop}px`
-    moveBullet(bullet)
-  }
-
-  function fireBullet() {
-    if (player.ammo > 0) {
-      createBullet()
-      player['ammo']--
-      falconBlastAudio.src = 'assets/laser-blast.mp3'
-      falconBlastAudio.play()
-    } else {
-      console.log('YOU\'RE OUT of AMMO!!!')
-    }
-    if (player.ammo > 0) ammoCount.innerHTML = `Remaining Ammo: ${player.ammo}`
-    else ammoCount.innerHTML = 'OUT OF AMMO!!!'
-  }
-
   function createBomb(alien) {
     const bomb = document.createElement('div')
     bomb.classList.add('bomb')
@@ -278,14 +282,37 @@ function setUp() {
     }
   }
 
-  // Layout Functions
-  function setAliens() {
-    aliens = []
-    alienContainer = document.createElement('div')
-    battleField.appendChild(alienContainer)
-    alienContainer.classList.add('alien-container')
+  // Setting Battlefield
+  function addCitySkyline() {
+    citySkyline = document.createElement('div')
+    battleField.appendChild(citySkyline)
+    citySkyline.classList.add('city-skyline')
   }
-  
+
+  function addGunner() {
+    gunner = document.createElement('div')
+    battleField.appendChild(gunner)
+    gunner.classList.add('gunner')
+    gunX = gunner.offsetLeft
+  }
+
+  function addBunkers(numBunkers, bunkerStrength) {
+    bunkers = new Array(numBunkers)
+    bunkerContainer = document.createElement('div')
+    battleField.appendChild(bunkerContainer)
+    bunkerContainer.classList.add('bunker-container')
+
+    for (let i = 0; i < bunkers.length; i++) {
+      const bunkerDiv = document.createElement('div')
+      bunkerDiv.classList.add('bunker')
+      bunkers[i] = [bunkerDiv, bunkerStrength]
+      bunkerContainer.appendChild(bunkerDiv)
+    }
+
+    bunkers.forEach(item => item[0].style.left = `${item[0].offsetLeft}px`)
+    bunkers.forEach(item => item[0].classList.add('fixed-bunker'))
+  }
+
   function addAliens(waveSize) {
     const newAlienWave = new Array(waveSize)
 
@@ -311,6 +338,13 @@ function setUp() {
     waveCount.innerHTML = ordinals[diffSetting.numWaves - player.wavesFought - 1] + ' wave'
   }
 
+  function setAliens() {
+    aliens = []
+    alienContainer = document.createElement('div')
+    battleField.appendChild(alienContainer)
+    alienContainer.classList.add('alien-container')
+  }
+  
   function addMotherShip() {
     const motherShip = document.createElement('div')
     alienContainer.appendChild(motherShip)
@@ -329,49 +363,22 @@ function setUp() {
     mainThemeAudio.play()
   }
 
-  function addBunkers(numBunkers, bunkerStrength) {
-    bunkers = new Array(numBunkers)
-    bunkerContainer = document.createElement('div')
-    battleField.appendChild(bunkerContainer)
-    bunkerContainer.classList.add('bunker-container')
-
-    for (let i = 0; i < bunkers.length; i++) {
-      const bunkerDiv = document.createElement('div')
-      bunkerDiv.classList.add('bunker')
-      bunkers[i] = [bunkerDiv, bunkerStrength]
-      bunkerContainer.appendChild(bunkerDiv)
-    }
-
-    bunkers.forEach(item => item[0].style.left = `${item[0].offsetLeft}px`)
-    bunkers.forEach(item => item[0].classList.add('fixed-bunker'))
-  }
-
-  function addGunner() {
-    gunner = document.createElement('div')
-    battleField.appendChild(gunner)
-    gunner.classList.add('gunner')
-    gunX = gunner.offsetLeft
-  }
-
   function setBattleField() {
+    addCitySkyline()
+    addGunner()
+    addBunkers(diffSetting.numBunkers, diffSetting.bunkerStrength)
     setAliens()
     addAliens(diffSetting.waveSize)
-    addBunkers(diffSetting.numBunkers, diffSetting.bunkerStrength)
-    addGunner()
-    aliens.forEach(item => item.addEventListener('click', () => console.log(item.offsetTop)))
-    citySkyline = document.createElement('div')
-    battleField.appendChild(citySkyline)
-    citySkyline.classList.add('city-skyline')
   }
 
   function clearBattleField() {
     battleField.removeChild(citySkyline)
-    battleField.removeChild(alienContainer)
-    battleField.removeChild(bunkerContainer)
     battleField.removeChild(gunner)
+    battleField.removeChild(bunkerContainer)
+    battleField.removeChild(alienContainer)
   }
 
-  // Collision Detection Functions
+  // Collision Detection
   function collisionDetector(movObj, statObj, movOffsetX = 0, movOffsetY = 0, statOffsetX = 0, statOffsetY = 0) {
     const movX = movObj.offsetLeft + movOffsetX
     const movY = movObj.offsetTop + movOffsetY
@@ -382,7 +389,21 @@ function setUp() {
     return xCondition || yCondition
   }
 
-  // Game Functions
+  // Game Set Up
+  function setGameVars() {
+    diffSetting = gameDiffSettings[diffSelector.value - 1]
+    motherShipLife = diffSetting.motherShipsLives
+    bombCondition = Array(diffSetting.bombFrequency).fill(false)
+    bombCondition[0] = true
+  }
+
+  function setPlayer() {
+    player['lives'] = diffSetting.playerLives
+    player['cityPopulation'] = 100000
+    player['wavesFought'] = diffSetting.numWaves
+    player['ammo'] = diffSetting.playerAmmo
+  }
+
   function setHTML() {
     homeDiv.style.display = 'none'
     gameOverDiv.style.display = 'none'
@@ -394,23 +415,14 @@ function setUp() {
     ammoCount.innerHTML = `Remaining ammo: ${player.ammo}`
   }
 
-  function setPlayer() {
-    player['lives'] = diffSetting.playerLives
-    player['cityPopulation'] = 100000
-    player['wavesFought'] = diffSetting.numWaves
-    player['ammo'] = diffSetting.playerAmmo
-  }
-
   function setUpGame() {
-    diffSetting = gameDiffSettings[diffSelector.value - 1]
-    motherShipLife = diffSetting.motherShipsLives
-    bombCondition = Array(diffSetting.bombFrequency).fill(false)
-    bombCondition[0] = true
+    setGameVars()
     setPlayer()
     setHTML()
     setBattleField()
   }
 
+  // Game Start & Play
   function startGame() {
     isGameOver = false
     setUpGame()
@@ -431,13 +443,6 @@ function setUp() {
     gameOverTimer = setInterval(checkForGameOver, 1)
   }
 
-  function checkForGameOver() {
-    if (aliens.length === 0 && player.wavesFought < 0 || player.lives === 0 || player.cityPopulation === 0) {
-      gameOver()
-    }
-    // console.log('Running game over timer')
-  }
-  
   function updateScore(event) {
     switch (event) {
       case 'alienKill':
@@ -470,6 +475,21 @@ function setUp() {
     playerCurrentScore.innerHTML = player['currentScore']
     lifeCount.innerHTML = player['lives']
     populationCount.innerHTML = player['cityPopulation']
+  }
+
+  function checkForGameOver() {
+    if (aliens.length === 0 && player.wavesFought < 0 || player.lives === 0 || player.cityPopulation === 0) {
+      gameOver()
+    }
+    // console.log('Running game over timer')
+  }
+
+  // Game Over & Reset
+  function resetGameVars() {
+    diffSetting = gameDiffSettings[diffSelector.value - 1]
+    gameClock = null
+    isGameOver = true
+    motherShipInPlay = false
   }
 
   function resetPlayer() {
@@ -510,10 +530,7 @@ function setUp() {
   }
 
   function resetGame() {
-    diffSetting = gameDiffSettings[diffSelector.value - 1]
-    gameClock = null
-    isGameOver = true
-    motherShipInPlay = false
+    resetGameVars()
     resetPlayer()
     resetTimers()
     resetDomVars()
@@ -524,19 +541,19 @@ function setUp() {
     if (aliens.length === 0 && player.wavesFought < 0) {
       returnString = 'VICTORY!!!\nYou defeated the empire!'
       mainThemeAudio.src = 'assets/star-wars-main-theme.mp3'
-      return [true, returnString]
+      matchResult = [true, returnString]
     } else if (player.lives === 0) {
       returnString = 'DEFEAT\nYou were killed'
     } else if (player.cityPopulation === 0) {
       returnString = 'DEFEAT\nThe Republic was destroyed'
     }
     mainThemeAudio.src = 'assets/imperial-march.mp3'
-    return [false, returnString] 
+    matchResult = [false, returnString] 
   }
 
   function updateStats() {
     localStorage.gamesPlayed = parseInt(localStorage.gamesPlayed) + 1
-    if (getResult()[0]) localStorage.wins = parseInt(localStorage.wins) + 1
+    if (matchResult[0]) localStorage.wins = parseInt(localStorage.wins) + 1
     else localStorage.losses = parseInt(localStorage.losses) + 1
     if (player['currentScore'] > parseInt(localStorage.highScore)) localStorage.highScore = player['currentScore']
     localStorage.totalScore = parseInt(localStorage.totalScore) + player.currentScore
@@ -559,8 +576,9 @@ function setUp() {
     resetHTML()    
   }
 
+  // Moving Between Sections
   function goGameOver() {
-    gameResult.innerHTML = getResult()[1]
+    gameResult.innerHTML = matchResult[1]
     gameOverDiv.style.display = 'flex'
     playerFinalScore.innerHTML = player['currentScore']
     scoreBoard.style.display = 'none'
@@ -597,6 +615,7 @@ function setUp() {
     goHome()
   }
 
+  // Initialisers
   function loadGame() {
     header.style.display = 'flex'
     main.style.display = 'flex'
@@ -633,12 +652,12 @@ function setUp() {
 
   // Event Listeners
   titleScreenStartBtn.addEventListener('click', loadGame)
-  startBtn.addEventListener('click', startGame)
-  playAgainBtn.addEventListener('click', startGame)
   homeBtn.forEach(Btn => Btn.addEventListener('click', goHome))
+  startBtn.addEventListener('click', startGame)
   statsBtn.addEventListener('click', goStats)
   gameExplainBtn.addEventListener('click', goExplainer)
   quitGameBtn.addEventListener('click', quitGame)
+  playAgainBtn.addEventListener('click', startGame)
 
   window.addEventListener('keydown', keyDownHandler)
   window.addEventListener('keyup', keyUpHandler)
