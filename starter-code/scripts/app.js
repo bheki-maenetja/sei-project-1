@@ -12,6 +12,7 @@ function setUp() {
     motherShipKills: 0
   }
 
+  let bombCondition
   let isGameOver = true
   let motherShipLife
   let gameClock = null
@@ -23,7 +24,9 @@ function setUp() {
 
   const gameDiffSettings = [{
     waveSize: 15,
+    waveSpeed: 0.002,
     numWaves: 3,
+    bombFrequency: 2,
     numBunkers: 3,
     bunkerStrength: 3,
     playerLives: 5,
@@ -32,7 +35,9 @@ function setUp() {
     motherShipsLives: 5
   }, {
     waveSize: 23,
+    waveSpeed: 0.003,
     numWaves: 5,
+    bombFrequency: 3,
     numBunkers: 2,
     bunkerStrength: 6,
     playerLives: 3,
@@ -41,7 +46,9 @@ function setUp() {
     motherShipsLives: 10
   }, {
     waveSize: 30,
+    waveSpeed: 0.004,
     numWaves: 8,
+    bombFrequency: 4,
     numBunkers: 1,
     bunkerStrength: 9,
     playerLives: 1,
@@ -126,12 +133,10 @@ function setUp() {
   }
 
   function moveAliens() {
-    alienStep = 0.002 * battleField.scrollWidth
-    direction ? alienX += alienStep : alienX -= alienStep
-    alienContainer.style.left = `${alienX}px`
+    let alienCondition
     if (alienContainer.offsetLeft >= battleField.scrollWidth - alienContainer.offsetWidth || alienContainer.offsetLeft <= 0) {
       direction = !direction
-      const alienCondition = aliens.every(alien => alien.offsetTop < alienContainer.scrollHeight - alien.offsetHeight)
+      alienCondition = aliens.every(alien => alien.offsetTop < alienContainer.scrollHeight - alien.offsetHeight)
       if (alienCondition) {
         aliens.forEach(alien => {
           let alienY = alien.offsetTop
@@ -140,6 +145,10 @@ function setUp() {
         })
       }
     }
+    alienCondition = aliens.every(alien => alien.offsetTop < alienContainer.scrollHeight - alien.offsetHeight)
+    alienStep = !alienCondition ? 0.008 * battleField.scrollWidth : diffSetting.waveSpeed * battleField.scrollWidth
+    direction ? alienX += alienStep : alienX -= alienStep
+    alienContainer.style.left = `${alienX}px`
   }
 
   function moveBullet(bullet) {
@@ -265,7 +274,7 @@ function setUp() {
   }
 
   function dropBombs() {
-    if ([true, false][Math.floor(Math.random() * 2)]) {
+    if (bombCondition[Math.floor(Math.random() * bombCondition.length)]) {
       const chosenAlien = aliens[Math.floor(Math.random() * aliens.length)]
       createBomb(chosenAlien)
       bombDropAudio.src = 'assets/bomb-launch.mp3'
@@ -399,6 +408,8 @@ function setUp() {
   function setUpGame() {
     diffSetting = gameDiffSettings[diffSelector.value - 1]
     motherShipLife = diffSetting.motherShipsLives
+    bombCondition = Array(diffSetting.bombFrequency).fill(false)
+    bombCondition[0] = true
     setPlayer()
     setHTML()
     setBattleField()
