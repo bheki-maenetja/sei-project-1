@@ -12,15 +12,6 @@ function setUp() {
     motherShipKills: 0
   }
 
-  let isGameOver = true
-  let gameResult
-  let gameClock = null
-  let motherShipInPlay = false
-
-  let bombCondition
-  let motherShipLife
-  let diffSetting
-
   const gameDiffSettings = [{
     waveSize: 15,
     waveSpeed: 0.002,
@@ -56,6 +47,15 @@ function setUp() {
     motherShipsLives: 15
   }]
 
+  let isGameOver = true
+  let gameResult
+  let gameClock = null
+  let motherShipInPlay = false
+
+  let diffSetting
+  let bombCondition
+  let motherShipLife
+
   const gamePlayStats = ['gamesPlayed', 'wins', 'losses','highScore', 'totalScore', 'alienKills', 'motherShipKills', 'wavesFought', 'ammoUsed', 'livesLost', 'populationLoss', 'gameTime']
   gamePlayStats.forEach(stat => localStorage.setItem(stat, 0))
 
@@ -83,7 +83,7 @@ function setUp() {
   const gameOverDiv = document.querySelector('#game-over')
   
   const titleScreenStartBtn = document.querySelector('#title-screen-start')
-  const homeBtn = document.querySelectorAll('.go-home')
+  const homeBtns = document.querySelectorAll('.go-home')
   const playBtn = document.querySelector('#play')
   const statsBtn = document.querySelector('#stats')
   const gameExplainBtn = document.querySelector('#go-explainer')
@@ -106,7 +106,7 @@ function setUp() {
   
   const gameStatSpans = document.querySelectorAll('.game-stat')
   
-  const falconBlastAudio = document.querySelector('#falcon-blast')
+  const laserBlastAudio = document.querySelector('#laser-blast')
   const bombDropAudio = document.querySelector('#bomb-drop')
   const bombExplosionAudio = document.querySelector('#bomb-explosion')
   const alienKillAudio = document.querySelector('#alien-kill')
@@ -220,8 +220,8 @@ function setUp() {
     if (player.ammo > 0) {
       createBullet()
       player['ammo']--
-      falconBlastAudio.src = 'assets/laser-blast.mp3'
-      falconBlastAudio.play()
+      laserBlastAudio.src = 'assets/laser-blast.mp3'
+      laserBlastAudio.play()
     } else {
       console.log('YOU\'RE OUT of AMMO!!!')
     }
@@ -644,7 +644,7 @@ function setUp() {
     } else if ([37,39].includes(e.keyCode)) {
       clearInterval(gunTimer)
       charCode = e.keyCode
-      gunTimer = setInterval(moveGunner, 15)
+      gunTimer = setInterval(moveGunner, 12)
     }
   }
 
@@ -654,7 +654,7 @@ function setUp() {
 
   // Event Listeners
   titleScreenStartBtn.addEventListener('click', loadGame)
-  homeBtn.forEach(Btn => Btn.addEventListener('click', goHome))
+  homeBtns.forEach(Btn => Btn.addEventListener('click', goHome))
   playBtn.addEventListener('click', startGame)
   statsBtn.addEventListener('click', goStats)
   gameExplainBtn.addEventListener('click', goExplainer)
