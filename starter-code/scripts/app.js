@@ -13,7 +13,7 @@ function setUp() {
   }
 
   let isGameOver = true
-  let matchResult
+  let gameResult
   let gameClock = null
   let motherShipInPlay = false
 
@@ -73,18 +73,18 @@ function setUp() {
   const header = document.querySelector('header')
   const main = document.querySelector('main')
   
-  const battleField = document.querySelector('div.container')
+  const mainContainer = document.querySelector('.container')
 
-  const titleScreen = document.querySelector('.title-screen')
+  const titleScreenDiv = document.querySelector('.title-screen')
   const homeDiv = document.querySelector('#home')
   const statsBoardDiv = document.querySelector('#player-stats')
-  const gameExplainerdiv = document.querySelector('#game-explainer')
-  const scoreBoard = document.querySelector('#score-board')
+  const gameExplainerDiv = document.querySelector('#game-explainer')
+  const scoreBoardDiv = document.querySelector('#score-board')
   const gameOverDiv = document.querySelector('#game-over')
   
   const titleScreenStartBtn = document.querySelector('#title-screen-start')
   const homeBtn = document.querySelectorAll('.go-home')
-  const startBtn = document.querySelector('#start')
+  const playBtn = document.querySelector('#play')
   const statsBtn = document.querySelector('#stats')
   const gameExplainBtn = document.querySelector('#go-explainer')
   const quitGameBtn = document.querySelector('#quit-game')
@@ -92,19 +92,19 @@ function setUp() {
 
   const diffSelector = document.querySelector('.diff-selector')
   
-  const gameResult = document.querySelector('#game-result')
-  const playerFinalScore = document.querySelector('#final-score')
-  const finalGameTime = document.querySelector('#game-time')
-  const playerHighScore = document.querySelectorAll('.high-score')
+  const gameResultSpan = document.querySelector('#game-result')
+  const playerFinalScoreSpan = document.querySelector('#final-score')
+  const finalGameTimeSpan = document.querySelector('#game-time')
+  const playerHighScoreSpans = document.querySelectorAll('.high-score')
   
-  const playerCurrentScore = document.querySelector('#current-score')
-  const timer = document.querySelector('#game-timer')
-  const lifeCount = document.querySelector('#life-count')
-  const populationCount = document.querySelector('#population-count')
-  const ammoCount = document.querySelector('#ammo-count')
-  const waveCount = document.querySelector('#wave-count')
+  const playerCurrentScoreSpan = document.querySelector('#current-score')
+  const gameClockSpan = document.querySelector('#game-timer')
+  const lifeCountSpan = document.querySelector('#life-count')
+  const populationCountSpan = document.querySelector('#population-count')
+  const ammoCountSpan = document.querySelector('#ammo-count')
+  const waveCountSpan = document.querySelector('#wave-count')
   
-  const gameStats = document.querySelectorAll('.game-stat')
+  const gameStatSpans = document.querySelectorAll('.game-stat')
   
   const falconBlastAudio = document.querySelector('#falcon-blast')
   const bombDropAudio = document.querySelector('#bomb-drop')
@@ -127,9 +127,9 @@ function setUp() {
   // Alien & Gunner Movements
   function moveGunner() {
     gunX = gunner.offsetLeft
-    gunStep = 0.01 * battleField.scrollWidth
+    gunStep = 0.01 * mainContainer.scrollWidth
     if (charCode === 39) {
-      gunner.offsetLeft + gunStep > battleField.scrollWidth - gunner.offsetWidth ? clearInterval(gunTimer) : gunX += gunStep
+      gunner.offsetLeft + gunStep > mainContainer.scrollWidth - gunner.offsetWidth ? clearInterval(gunTimer) : gunX += gunStep
     } else if (charCode === 37) {
       gunner.offsetLeft - gunStep <= 0 ? clearInterval(gunTimer) : gunX -= gunStep
     }
@@ -138,7 +138,7 @@ function setUp() {
 
   function moveAliens() {
     let alienCondition
-    if (alienContainer.offsetLeft >= battleField.scrollWidth - alienContainer.offsetWidth || alienContainer.offsetLeft <= 0) {
+    if (alienContainer.offsetLeft >= mainContainer.scrollWidth - alienContainer.offsetWidth || alienContainer.offsetLeft <= 0) {
       direction = !direction
       alienCondition = aliens.every(alien => alien.offsetTop < alienContainer.scrollHeight - alien.offsetHeight)
       if (alienCondition) {
@@ -150,7 +150,7 @@ function setUp() {
       }
     }
     alienCondition = aliens.every(alien => alien.offsetTop < alienContainer.scrollHeight - alien.offsetHeight)
-    alienStep = !alienCondition ? 0.008 * battleField.scrollWidth : diffSetting.waveSpeed * battleField.scrollWidth
+    alienStep = !alienCondition ? 0.008 * mainContainer.scrollWidth : diffSetting.waveSpeed * mainContainer.scrollWidth
     direction ? alienX += alienStep : alienX -= alienStep
     alienContainer.style.left = `${alienX}px`
   }
@@ -161,7 +161,7 @@ function setUp() {
     const bulletTimer = setInterval(() => {
       if (isGameOver) {
         clearInterval(bulletTimer)
-        battleField.removeChild(bullet)
+        mainContainer.removeChild(bullet)
         return
       }
       aliens.forEach(alien => {
@@ -180,13 +180,13 @@ function setUp() {
             aliens.splice(aliens.indexOf(alien), 1)
             updateScore('alienKill')
           }
-          battleField.removeChild(bullet)
+          mainContainer.removeChild(bullet)
           clearInterval(bulletTimer)
         }
       })
       bunkers.map(bunker => {
         if (!collisionDetector(bullet, bunker[0], 0, 0, 0, bunkerContainer.offsetTop)) {
-          battleField.removeChild(bullet)
+          mainContainer.removeChild(bullet)
           bunker[1]--
           console.log('Bunker strength', bunker[1])
           if (bunker[1] === 0) {
@@ -197,11 +197,11 @@ function setUp() {
         }
       })
       if (bulletY > 0) {
-        bulletY -= 0.003 * battleField.scrollHeight
+        bulletY -= 0.003 * mainContainer.scrollHeight
         bullet.style.top = `${bulletY}px`
       } else {
         clearInterval(bulletTimer)
-        battleField.removeChild(bullet)
+        mainContainer.removeChild(bullet)
         console.log('Shot landed')
       }
     }, 1)
@@ -210,7 +210,7 @@ function setUp() {
   function createBullet() {
     const bullet = document.createElement('div')
     bullet.classList.add('bullet')
-    battleField.appendChild(bullet)
+    mainContainer.appendChild(bullet)
     bullet.style.left = `${gunX}px`
     bullet.style.top = `${gunner.offsetTop}px`
     moveBullet(bullet)
@@ -225,8 +225,8 @@ function setUp() {
     } else {
       console.log('YOU\'RE OUT of AMMO!!!')
     }
-    if (player.ammo > 0) ammoCount.innerHTML = `Remaining Ammo: ${player.ammo}`
-    else ammoCount.innerHTML = 'OUT OF AMMO!!!'
+    if (player.ammo > 0) ammoCountSpan.innerHTML = `Remaining Ammo: ${player.ammo}`
+    else ammoCountSpan.innerHTML = 'OUT OF AMMO!!!'
   }
 
   function moveBomb(bomb) {
@@ -234,12 +234,12 @@ function setUp() {
     const bombTimer = setInterval(() => {
       if (isGameOver) {
         clearInterval(bombTimer)
-        battleField.removeChild(bomb)
+        mainContainer.removeChild(bomb)
         return
       }
       bunkers.forEach(bunker => {
         if (!collisionDetector(bomb, bunker[0], 0, bomb.offsetHeight, 0, bunkerContainer.offsetTop)) {
-          battleField.removeChild(bomb)
+          mainContainer.removeChild(bomb)
           bunker[1]--
           console.log('Bunker strength', bunker[1])
           if (bunker[1] === 0) {
@@ -251,14 +251,14 @@ function setUp() {
       })
       if (!collisionDetector(bomb, gunner, 0, bomb.offsetHeight, 0, 0)) {
         clearInterval(bombTimer)
-        battleField.removeChild(bomb)
+        mainContainer.removeChild(bomb)
         updateScore('gunnerHit')
-      } else if (bombY >= battleField.scrollHeight - bomb.offsetHeight) {
+      } else if (bombY >= mainContainer.scrollHeight - bomb.offsetHeight) {
         clearInterval(bombTimer)
-        battleField.removeChild(bomb)
+        mainContainer.removeChild(bomb)
         updateScore('cityHit')
       } else {
-        bombY += 0.003 * battleField.scrollHeight
+        bombY += 0.003 * mainContainer.scrollHeight
         bomb.style.top = `${bombY}px`
       }
     }, 5)
@@ -267,7 +267,7 @@ function setUp() {
   function createBomb(alien) {
     const bomb = document.createElement('div')
     bomb.classList.add('bomb')
-    battleField.appendChild(bomb)
+    mainContainer.appendChild(bomb)
     bomb.style.left = `${alien.offsetLeft + alienContainer.offsetLeft}px`
     bomb.style.top = `${alien.offsetTop + alienContainer.offsetTop}px`
     moveBomb(bomb)
@@ -285,13 +285,13 @@ function setUp() {
   // Setting Battlefield
   function addCitySkyline() {
     citySkyline = document.createElement('div')
-    battleField.appendChild(citySkyline)
+    mainContainer.appendChild(citySkyline)
     citySkyline.classList.add('city-skyline')
   }
 
   function addGunner() {
     gunner = document.createElement('div')
-    battleField.appendChild(gunner)
+    mainContainer.appendChild(gunner)
     gunner.classList.add('gunner')
     gunX = gunner.offsetLeft
   }
@@ -299,7 +299,7 @@ function setUp() {
   function addBunkers(numBunkers, bunkerStrength) {
     bunkers = new Array(numBunkers)
     bunkerContainer = document.createElement('div')
-    battleField.appendChild(bunkerContainer)
+    mainContainer.appendChild(bunkerContainer)
     bunkerContainer.classList.add('bunker-container')
 
     for (let i = 0; i < bunkers.length; i++) {
@@ -335,13 +335,13 @@ function setUp() {
 
     player['wavesFought']--
     const ordinals = ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th']
-    waveCount.innerHTML = ordinals[diffSetting.numWaves - player.wavesFought - 1] + ' wave'
+    waveCountSpan.innerHTML = ordinals[diffSetting.numWaves - player.wavesFought - 1] + ' wave'
   }
 
   function setAliens() {
     aliens = []
     alienContainer = document.createElement('div')
-    battleField.appendChild(alienContainer)
+    mainContainer.appendChild(alienContainer)
     alienContainer.classList.add('alien-container')
   }
   
@@ -357,7 +357,7 @@ function setUp() {
     aliens.push(motherShip)
     motherShipInPlay = true
     player['wavesFought']--
-    waveCount.innerHTML = 'DARTH VADER'
+    waveCountSpan.innerHTML = 'DARTH VADER'
 
     mainThemeAudio.src = 'assets/imperial-march.mp3'
     mainThemeAudio.play()
@@ -372,10 +372,10 @@ function setUp() {
   }
 
   function clearBattleField() {
-    battleField.removeChild(citySkyline)
-    battleField.removeChild(gunner)
-    battleField.removeChild(bunkerContainer)
-    battleField.removeChild(alienContainer)
+    mainContainer.removeChild(citySkyline)
+    mainContainer.removeChild(gunner)
+    mainContainer.removeChild(bunkerContainer)
+    mainContainer.removeChild(alienContainer)
   }
 
   // Collision Detection
@@ -407,12 +407,12 @@ function setUp() {
   function setHTML() {
     homeDiv.style.display = 'none'
     gameOverDiv.style.display = 'none'
-    scoreBoard.style.display = 'flex'
-    playerCurrentScore.innerHTML = 0
-    timer.innerHTML = 0
-    populationCount.innerHTML = player.cityPopulation
-    lifeCount.innerHTML = player.lives
-    ammoCount.innerHTML = `Remaining ammo: ${player.ammo}`
+    scoreBoardDiv.style.display = 'flex'
+    playerCurrentScoreSpan.innerHTML = 0
+    gameClockSpan.innerHTML = 0
+    populationCountSpan.innerHTML = player.cityPopulation
+    lifeCountSpan.innerHTML = player.lives
+    ammoCountSpan.innerHTML = `Remaining ammo: ${player.ammo}`
   }
 
   function setUpGame() {
@@ -435,7 +435,7 @@ function setUp() {
   function playGame() {
     clearInterval(gameOverTimer)
     gameClock++
-    timer.innerHTML = gameClock
+    gameClockSpan.innerHTML = gameClock
     if (player.wavesFought === 0 && !motherShipInPlay && aliens.every(item => item.offsetTop > 0.3 * alienContainer.scrollHeight)) addMotherShip()
     if (aliens.every(item => item.offsetTop > 0.6 * alienContainer.scrollHeight) && !motherShipInPlay) addAliens(diffSetting.waveSize)
     dropBombs()
@@ -472,9 +472,9 @@ function setUp() {
       default:
         break
     }
-    playerCurrentScore.innerHTML = player['currentScore']
-    lifeCount.innerHTML = player['lives']
-    populationCount.innerHTML = player['cityPopulation']
+    playerCurrentScoreSpan.innerHTML = player['currentScore']
+    lifeCountSpan.innerHTML = player['lives']
+    populationCountSpan.innerHTML = player['cityPopulation']
   }
 
   function checkForGameOver() {
@@ -522,10 +522,10 @@ function setUp() {
   }
 
   function resetHTML() {
-    playerCurrentScore.innerHTML = 0
-    timer.innerHTML = 0
-    populationCount.innerHTML = 0
-    lifeCount.innerHTML = 0
+    playerCurrentScoreSpan.innerHTML = 0
+    gameClockSpan.innerHTML = 0
+    populationCountSpan.innerHTML = 0
+    lifeCountSpan.innerHTML = 0
     mainThemeAudio.play()
   }
 
@@ -541,19 +541,21 @@ function setUp() {
     if (aliens.length === 0 && player.wavesFought < 0) {
       returnString = 'VICTORY!!!\nYou defeated the empire!'
       mainThemeAudio.src = 'assets/star-wars-main-theme.mp3'
-      matchResult = [true, returnString]
+      mainThemeAudio.play()
+      gameResult = [true, returnString]
+      return
     } else if (player.lives === 0) {
       returnString = 'DEFEAT\nYou were killed'
     } else if (player.cityPopulation === 0) {
       returnString = 'DEFEAT\nThe Republic was destroyed'
     }
     mainThemeAudio.src = 'assets/imperial-march.mp3'
-    matchResult = [false, returnString] 
+    gameResult = [false, returnString] 
   }
 
   function updateStats() {
     localStorage.gamesPlayed = parseInt(localStorage.gamesPlayed) + 1
-    if (matchResult[0]) localStorage.wins = parseInt(localStorage.wins) + 1
+    if (gameResult[0]) localStorage.wins = parseInt(localStorage.wins) + 1
     else localStorage.losses = parseInt(localStorage.losses) + 1
     if (player['currentScore'] > parseInt(localStorage.highScore)) localStorage.highScore = player['currentScore']
     localStorage.totalScore = parseInt(localStorage.totalScore) + player.currentScore
@@ -576,21 +578,21 @@ function setUp() {
     resetHTML()    
   }
 
-  // Moving Between Sections
+  // Moving Between Game Boards
   function goGameOver() {
-    gameResult.innerHTML = matchResult[1]
+    gameResultSpan.innerHTML = gameResult[1]
     gameOverDiv.style.display = 'flex'
-    playerFinalScore.innerHTML = player['currentScore']
-    scoreBoard.style.display = 'none'
-    playerHighScore.forEach(item => item.innerHTML = localStorage.highScore)
-    finalGameTime.innerHTML = gameClock
+    playerFinalScoreSpan.innerHTML = player['currentScore']
+    scoreBoardDiv.style.display = 'none'
+    playerHighScoreSpans.forEach(item => item.innerHTML = localStorage.highScore)
+    finalGameTimeSpan.innerHTML = gameClock
   }
 
   function goHome() {
-    scoreBoard.style.display = 'none'
+    scoreBoardDiv.style.display = 'none'
     statsBoardDiv.style.display = 'none'
     gameOverDiv.style.display = 'none'
-    gameExplainerdiv.style.display = 'none'
+    gameExplainerDiv.style.display = 'none'
     homeDiv.style.display = 'flex'
   }
 
@@ -598,19 +600,19 @@ function setUp() {
     homeDiv.style.display = 'none'
     statsBoardDiv.style.display = 'flex'
     for (let i = 0; i < gamePlayStats.length; i++) {
-      gameStats[i].innerHTML = localStorage[gamePlayStats[i]]
+      gameStatSpans[i].innerHTML = localStorage[gamePlayStats[i]]
     }
   }
 
   function goExplainer() {
     homeDiv.style.display = 'none'
-    gameExplainerdiv.style.display = 'flex'
+    gameExplainerDiv.style.display = 'flex'
   }
 
   function quitGame() {
     clearBattleField()
     resetGame()
-    mainThemeAudio.src = 'assets/star-wars-main-theme.mp3'
+    mainThemeAudio.src = 'assets/imperial-march.mp3'
     resetHTML()
     goHome()
   }
@@ -619,16 +621,16 @@ function setUp() {
   function loadGame() {
     header.style.display = 'flex'
     main.style.display = 'flex'
-    titleScreen.style.display = 'none'
+    titleScreenDiv.style.display = 'none'
     mainThemeAudio.src = 'assets/star-wars-opening-theme.mp3'
     mainThemeAudio.play()
   }
 
   function initialHTMLSetUp() {
     gameOverDiv.style.display = 'none'
-    scoreBoard.style.display = 'none'
+    scoreBoardDiv.style.display = 'none'
     statsBoardDiv.style.display = 'none'
-    gameExplainerdiv.style.display = 'none'
+    gameExplainerDiv.style.display = 'none'
     header.style.display = 'none'
     main.style.display = 'none'
   }
@@ -653,7 +655,7 @@ function setUp() {
   // Event Listeners
   titleScreenStartBtn.addEventListener('click', loadGame)
   homeBtn.forEach(Btn => Btn.addEventListener('click', goHome))
-  startBtn.addEventListener('click', startGame)
+  playBtn.addEventListener('click', startGame)
   statsBtn.addEventListener('click', goStats)
   gameExplainBtn.addEventListener('click', goExplainer)
   quitGameBtn.addEventListener('click', quitGame)
