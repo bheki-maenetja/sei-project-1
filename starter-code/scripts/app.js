@@ -298,16 +298,18 @@ function setUp() {
     gunX = gunner.offsetLeft
   }
 
-  function addBunkers(numBunkers, bunkerStrength) {
-    bunkers = new Array(numBunkers)
+  function setBunkers() {
+    bunkers = new Array(diffSetting.numBunkers)
     bunkerContainer = document.createElement('div')
     mainContainer.appendChild(bunkerContainer)
     bunkerContainer.classList.add('bunker-container')
+  }
 
+  function addBunkers() {
     for (let i = 0; i < bunkers.length; i++) {
       const bunkerDiv = document.createElement('div')
       bunkerDiv.classList.add('bunker')
-      bunkers[i] = [bunkerDiv, bunkerStrength]
+      bunkers[i] = [bunkerDiv, diffSetting.bunkerStrength]
       bunkerContainer.appendChild(bunkerDiv)
     }
 
@@ -315,15 +317,21 @@ function setUp() {
     bunkers.forEach(item => item[0].classList.add('fixed-bunker'))
   }
 
-  function addAliens(waveSize) {
-    const newAlienWave = new Array(waveSize)
+  function setAliens() {
+    aliens = []
+    alienContainer = document.createElement('div')
+    mainContainer.appendChild(alienContainer)
+    alienContainer.classList.add('alien-container')
+  }
+
+  function addAliens() {
+    const newAlienWave = new Array(diffSetting.waveSize)
 
     for (let i = 0; i < newAlienWave.length; i++) {
       const alien = document.createElement('div')
       alien.classList.add('alien')
       newAlienWave[i] = alien
       alienContainer.appendChild(alien)
-      // alien.style.backgroundColor = ['yellow', 'green', 'red', 'blue', 'lime', 'cyan', 'violet'][Math.floor(Math.random() * 7)]
     }
 
     newAlienWave.forEach(item => {
@@ -340,13 +348,6 @@ function setUp() {
     waveCountSpan.innerHTML = ordinals[diffSetting.numWaves - player.wavesFought - 1] + ' wave'
   }
 
-  function setAliens() {
-    aliens = []
-    alienContainer = document.createElement('div')
-    mainContainer.appendChild(alienContainer)
-    alienContainer.classList.add('alien-container')
-  }
-  
   function addMotherShip() {
     const motherShip = document.createElement('div')
     alienContainer.appendChild(motherShip)
@@ -366,10 +367,11 @@ function setUp() {
 
   function setBattleField() {
     addCitySkyline()
+    setBunkers()
+    addBunkers()
     addGunner()
-    addBunkers(diffSetting.numBunkers, diffSetting.bunkerStrength)
     setAliens()
-    addAliens(diffSetting.waveSize)
+    addAliens()
   }
 
   function clearBattleField() {
