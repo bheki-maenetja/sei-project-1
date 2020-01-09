@@ -26,7 +26,7 @@ function setUp() {
     waveSize: 15,
     waveSpeed: 0.002,
     numWaves: 3,
-    bombFrequency: 2,
+    bombFrequency: 4,
     numBunkers: 3,
     bunkerStrength: 3,
     playerLives: 5,
@@ -48,7 +48,7 @@ function setUp() {
     waveSize: 30,
     waveSpeed: 0.004,
     numWaves: 8,
-    bombFrequency: 4,
+    bombFrequency: 2,
     numBunkers: 1,
     bunkerStrength: 9,
     playerLives: 1,
@@ -168,6 +168,8 @@ function setUp() {
               aliens.splice(aliens.indexOf(alien), 1)
               updateScore('motherShipKill')
             }
+            alienKillAudio.src = 'assets/alien-kill.mp3'
+            alienKillAudio.play()
           } else {
             alienContainer.removeChild(alien)
             aliens.splice(aliens.indexOf(alien), 1)

@@ -4,14 +4,14 @@
 }
 
 body {
-  min-height: 700px;
-  height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  min-height: 700px;
+  height: 100vh;
   background-image: url('../assets/star-wars-wallpaper.jpg');
-  background-size: cover;
+  background-size: 100% 100%;
 }
 
 /* Title Screen */
@@ -19,29 +19,30 @@ body {
 .title-screen {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   width: 60%;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0px 0px 10px 5px black
 }
 
 .title-screen > img {
-  flex-grow: 0.5;
   max-width: 100%;
 }
 
 .title-screen > a {
-  text-decoration: none;
   align-self: center;
-  padding: 15px;
+  width: 50%;
+  padding: 10px;
   border: 5px solid cyan;
-  border-radius: 5px;
-  font-family: 'Ubuntu', sans-serif;
+  border-radius: 100px;
   font-size: 35px;
   font-weight: 900;
+  text-decoration: none;
+  font-family: 'Ubuntu', sans-serif;
   text-align: center;
   background-color: darkblue;
   color: cyan;
-  width: 50%;
 }
 
 .title-screen > a:hover {
@@ -54,45 +55,39 @@ body {
 
 header {
   display: flex;
-  flex-direction: column;
   justify-content: center;
-  align-items: center;
+  min-height: 15%;
   height: 20vh;
-  width: 100vw;
+  width: 100%;
 }
 
 header img {
   max-height: 100%;
 }
 
-header > h1 {
-  color: white;
-  text-shadow: 2px 2px navy;
-  font-family: 'Ubuntu', sans-serif;
-  font-weight: 900;
-}
+/* Main Section & Container */
 
-/* Main Section, Containers & Game Boards */
 main {
-  width: 100vw;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
+  flex-grow: 1;
+  width: 100%;
   height: 80vh;
-  margin: 0;
 }
 
 .container {
+  position: relative;
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
   width: 500px;
   height: 95%;
-  border: 5px solid cyan;
+  border: 5px solid deepskyblue;
   border-radius: 5px;
   box-shadow: 0px 0px 10px 5px darkblue;
-  position: relative;
 }
+
+/* Game Boards */
 
 .game-board {
   align-self: center;
@@ -100,24 +95,25 @@ main {
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
-  padding: 10px;
-  border: 2px solid cyan;
-  border-radius: 5px;
-  background-color: dodgerblue;
-  box-shadow: 0px 0px 10px 5px navy;
   min-height: 30%;
   max-width: 60%;
+  padding: 10px;
+  border: 2px solid cyan;
+  border-radius: 25px;
+  background-color: dodgerblue;
+  box-shadow: 0px 0px 10px 5px navy;
 }
 
 .game-board > * {
   margin: 5px;
+  font-family: 'Ubuntu', sans-serif;
+  color: white;
+  text-align: center;
 }
 
 .game-board > h2, .game-board > h3 {
-  font-family: 'Ubuntu', sans-serif;
-  font-weight: 700;
-  color: white;
-  text-shadow: 2px 1px black;
+  font-weight: 900;
+  text-shadow: 2px 2px black;
 }
 
 .game-board > form {
@@ -125,32 +121,16 @@ main {
   flex-direction: column;
 }
 
-.diff-selector {
-  background-color: darkblue;
-  color: white;
-  font-family: 'Ubuntu', sans-serif;
-  font-weight: 500;
-  border: 2px solid cyan;
-  height: 25px;  
-}
-
-.diff-selector:focus {
-  outline: none;
-}
-
 .game-board > a {
-  text-decoration: none;
-  align-self: center;
+  width: 100%;
   padding: 5px;
   border: 2px solid cyan;
-  border-radius: 5px;
-  font-family: 'Ubuntu', sans-serif;
+  border-radius: 100px;
+  text-decoration: none;
   font-size: 15px;
   font-weight: 500;
-  text-align: center;
   background-color: darkblue;
   color: cyan;
-  width: 95%;
 }
 
 .game-board > a:hover {
@@ -160,12 +140,8 @@ main {
 }
 
 .game-board p, pre {
-  text-align: center;
-  font-family: 'Ubuntu', sans-serif;
   font-weight: 500;
-  color: white;
   text-shadow: 1px 1px black;
-  margin: 5px;
 }
 
 .game-board[id='player-stats'] > p, .game-board[id='score-board'] > p {
@@ -173,7 +149,23 @@ main {
   text-align: left;
 }
 
+.diff-selector {
+  height: 25px;  
+  border: 2px solid cyan;
+  background-color: darkblue;
+  color: white;
+  font-family: 'Ubuntu', sans-serif;
+  font-weight: 500;
+}
+
+.diff-selector:focus {
+  outline: none;
+}
+
+/* Gameplay Objects */
+
 .alien-container {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -181,72 +173,59 @@ main {
   width: 50%;
   height: 60%;
   border: 1px solid transparent;
-  position: relative;
 }
 
 .bunker-container {
-  display: flex;
-  justify-content: space-evenly;
   position: absolute;
   top: 65%;
+  display: flex;
+  justify-content: space-evenly;
   width: 100%;
   height: 10%
 }
 
-/* Gameplay Objects */
 .gunner {
+  position: absolute;
+  top: 80%;
+  left: 45%;
   width: 9%;
   height: 7%;
   background-image: url('../assets/baby-yoda.png');
   background-size: 100% 100%;
-  position: absolute;
-  left: 45%;
-  top: 80%;
 }
 
 .bullet {
+  position: absolute;
   width: 1%;
   height: 4%;
+  border-radius: 100px;
   background-color: cyan;
   box-shadow: 0px 0px 10px 10px blue;
-  border-radius: 100px 100px 0 0;
-  position: absolute;
 }
 
 .bomb {
+  position: absolute;
   width: 3%;
   height: 4%;
-  background-color: orangered;
-  box-shadow: 0px 0px 10px 2px red;
-  border-radius: 0 0 100% 100%;
-  position: absolute;
+  border-radius: 0 0 100px 100px;
+  background-color: orange;
+  box-shadow: 0px 0px 10px 5px red;
 }
 
 .alien {
+  margin-top: 5px;
   width: 17%;
   height: 9%;
-  margin-top: 5px;
   background-image: url('../assets/stormtrooper.png');
   background-size: 100% 100%;
 }
 
-.fixed-alien {
-  margin-top: 0px;
-  position: absolute;
-}
-
 .mothership {
+  margin: 5px auto;
   width: 34%;
   height: 18%;
-  margin-top: 5px;
   background-image: url('../assets/darth-vader.png');
   background-size: 100% 100%;
-  margin: 5px auto
-}
-
-.fixed-mothership {
-  position: absolute;
-  margin: 0
 }
 
 .bunker {
@@ -256,17 +235,18 @@ main {
   background-size: 100% 100%;
 }
 
-.fixed-bunker {
+.fixed-alien, .fixed-mothership, .fixed-bunker {
   position: absolute;
+  margin: 0
 }
 
 .city-skyline {
-  width: 100%;
-  height: 15%;
   position: absolute;
-  top: 85%;
+  top: 88%;
+  width: 100%;
+  height: 12%;
   background-image: url('../assets/skyline.png');
-  background-size: 100% 100%;
+  background-size: contain;
 }
 
 /* Media Queries */
@@ -274,18 +254,6 @@ main {
 @media screen and (max-width: 840px) {
   body {
     background: url('../assets/death-star-background.jpg');
-    background-size: 100% 100%;
-  }
-
-  header {
-    height: 15vh;
-  }
-
-  main {
-    padding-bottom: 10px;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 85vh;
   }
 
   .title-screen {
@@ -297,26 +265,37 @@ main {
     font-size: 25px;
   }
 
-  .game-board[id='score-board'] {
-    padding: 2px 10px;
-    min-height: 0;
-    height: fit-content;
-    width: 35%;
-    margin-top: 5px;
+  header {
+    height: 15vh;
   }
 
-  .game-board[id='score-board'] > p {
-    font-size: 15px;
-    margin: 1px 0px;
-    align-self: center;
-  }
-
-  .game-board[id='score-board'] > a {
-    margin: 5px 0 0 0;
+  main {
+    flex-direction: column;
+    justify-content: space-between;
+    padding-bottom: 10px;
+    height: 85vh;
   }
 
   .container {
     height: 0;
     flex-grow: 1;
   }
+
+  .game-board[id='score-board'] {
+    width: 35%;
+    height: fit-content;
+    min-height: 0;
+    padding: 2px 10px;
+    margin-top: 5px;
+  }
+
+  .game-board[id='score-board'] > p {
+    align-self: center;
+    margin: 1px 0px;
+    font-size: 15px;
+  }
+
+  .game-board[id='score-board'] > a {
+    margin: 5px 0 0 0;
+  }  
 }
