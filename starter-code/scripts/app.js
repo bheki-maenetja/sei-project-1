@@ -175,8 +175,6 @@ function setUp() {
           }
           battleField.removeChild(bullet)
           clearInterval(bulletTimer)
-          alienKillAudio.src = 'assets/alien-kill.mp3'
-          alienKillAudio.play()
         }
       })
       bunkers.map(bunker => {
@@ -226,14 +224,10 @@ function setUp() {
         clearInterval(bombTimer)
         battleField.removeChild(bomb)
         updateScore('gunnerHit')
-        bombExplosionAudio.src = 'assets/bomb-hit.mp3'
-        bombExplosionAudio.play()
       } else if (bombY >= battleField.scrollHeight - bomb.offsetHeight) {
         clearInterval(bombTimer)
         battleField.removeChild(bomb)
         updateScore('cityHit')
-        bombExplosionAudio.src = 'assets/bomb-explosion.mp3'
-        bombExplosionAudio.play()
       } else {
         bombY += 0.003 * battleField.scrollHeight
         bomb.style.top = `${bombY}px`
@@ -423,7 +417,7 @@ function setUp() {
     mainThemeAudio.src = 'assets/heat-of-battle.mp3'
     mainThemeAudio.play()
   }
-
+  
   function playGame() {
     clearInterval(gameOverTimer)
     gameClock++
@@ -448,6 +442,8 @@ function setUp() {
         player['currentScore'] += 100
         player['alienKills']++
         console.log('Alien Kill!!!\nScore:', player['currentScore'])
+        alienKillAudio.src = 'assets/alien-kill.mp3'
+        alienKillAudio.play()
         break
       case 'motherShipKill':
         player['currentScore'] += motherShipLife === 0 ? 500 : 0
@@ -457,10 +453,14 @@ function setUp() {
       case 'cityHit':
         player['cityPopulation'] -= diffSetting.populationHit
         console.log('City hit!\nPopulation Remaining:', player['cityPopulation'])
+        bombExplosionAudio.src = 'assets/bomb-explosion.mp3'
+        bombExplosionAudio.play()
         break
       case 'gunnerHit':
         player['lives']--
         console.log(`You've been hit!\nLives remaining: ${player['lives']}`)
+        bombExplosionAudio.src = 'assets/bomb-hit.mp3'
+        bombExplosionAudio.play()
         break
       default:
         break
@@ -603,6 +603,15 @@ function setUp() {
     mainThemeAudio.play()
   }
 
+  function initialHTMLSetUp() {
+    gameOverDiv.style.display = 'none'
+    scoreBoard.style.display = 'none'
+    statsBoardDiv.style.display = 'none'
+    gameExplainerdiv.style.display = 'none'
+    header.style.display = 'none'
+    main.style.display = 'none'
+  }
+
   // Event Handlers
   function keyDownHandler(e) {
     if (isGameOver) {
@@ -632,13 +641,8 @@ function setUp() {
   window.addEventListener('keydown', keyDownHandler)
   window.addEventListener('keyup', keyUpHandler)
 
-  // Other
-  gameOverDiv.style.display = 'none'
-  scoreBoard.style.display = 'none'
-  statsBoardDiv.style.display = 'none'
-  gameExplainerdiv.style.display = 'none'
-  header.style.display = 'none'
-  main.style.display = 'none'
+  // Function Calls
+  initialHTMLSetUp()
 }
 
 window.addEventListener('DOMContentLoaded', setUp)
