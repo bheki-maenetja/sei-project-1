@@ -270,7 +270,12 @@ main {
 
 /* Media Queries */
 
-@media screen and (max-width: 750px) {
+@media screen and (max-width: 840px) {
+  body {
+    background: url('../assets/death-star-background.jpg');
+    background-size: 100% 100%;
+  }
+
   header {
     height: 15vh;
   }
