@@ -126,6 +126,11 @@ function setUp() {
 
   // Alien & Gunner Movements
   function moveGunner() {
+    /* HOW IT WORKS
+    1) gunX is assigned to the x-coordinate (in px) of the gunner. 
+    2) Depending on the value of charCode the gunX will be either incremented or decremented.
+    3) The position of the gunner is then set to the new value of gunX
+    */
     gunX = gunner.offsetLeft
     gunStep = 0.01 * mainContainer.scrollWidth
     if (charCode === 39) {
@@ -137,6 +142,19 @@ function setUp() {
   }
 
   function moveAliens() {
+    /* HOW IT WORKS
+    1) The variable alienCondition is declared
+    2) IF the alienContainer is at either end of the mainContainer
+      a) The value of direction is changed
+      b) alienCondition is assigned to a boolean denoting if any aliens are at the bottom of alienContainer
+      c) IF alienCondition is true
+        i) Each alien is moved down by 1% of the alienContainer's height
+    3) alienCondition is assigned to a boolean denoting if any aliens are at the bottom of alienContainer
+    4) Depending on the value of alienCondition alienStep is assigned to 0.8% of the mainContainer's width or 
+    to the percentage specified in diffSetting
+    5) Depending on the value of direction alienX will either be incremented or decremented by alienStep
+    6) The position of the alienContainer is set to the postion of alien
+    */ 
     let alienCondition
     if (alienContainer.offsetLeft >= mainContainer.scrollWidth - alienContainer.offsetWidth || alienContainer.offsetLeft <= 0) {
       direction = !direction
@@ -157,6 +175,14 @@ function setUp() {
 
   // Bullets & Bombs
   function moveBullet(bullet) {
+    /* HOW IT WORKS
+    1) The function takes a parameter (bullet) which is a DOM object with class bullet
+    2) The variable bulletY is declared and assigned to the y-coordinate of bullet
+    3) A timer is (bulletTimer) runs a function that checks if the bullet collided with any
+    of the aliens, bunkers or top of the mainContainer; it does this every millisecond
+    4) While the bullet hasn't collided with anything bulletY is incremented and the position
+    of bullet is set to bulletY
+    */
     let bulletY = bullet.offsetTop
     const bulletTimer = setInterval(() => {
       if (isGameOver) {
@@ -210,6 +236,13 @@ function setUp() {
   }
 
   function createBullet() {
+    /* HOW IT WORKS
+    1) A DOM object is created and assigned to the variable bullet
+    2) bullet is then given a class of 'bullet' and added to mainContainer
+    3) The left and top position of bullet is set to the gunX and the vertical
+    position of the gunner respectively
+    4) The moveBullet() function is then run with bullet passed in as a parameter
+    */
     const bullet = document.createElement('div')
     bullet.classList.add('bullet')
     mainContainer.appendChild(bullet)
@@ -219,6 +252,10 @@ function setUp() {
   }
 
   function fireBullet() {
+    /* HOW IT WORKS
+    1) IF player.ammo is greater than 0 the createBullet() function will be run
+    and the player.ammo will be decremented
+    */
     if (player.ammo > 0) {
       createBullet()
       player['ammo']--
@@ -231,6 +268,14 @@ function setUp() {
   }
 
   function moveBomb(bomb) {
+    /* HOW IT WORKS
+    1) The function takes a parameter (bomb) which is a DOM object with class bomb
+    2) The variable bombY is declared and assigned to the y-coordinate of bomb
+    3) A timer is (bombTimer) runs a function that checks if the bomb has collided with any
+    of the gunner, bunkers or bottom of the mainContainer; it does this every millisecond
+    4) While the bomb hasn't collided with anything bombY is incremented and the position
+    of bomb is set to bombY
+    */
     let bombY = bomb.offsetTop
     const bombTimer = setInterval(() => {
       if (isGameOver) {
@@ -268,6 +313,14 @@ function setUp() {
   }
 
   function createBomb(alien) {
+    /* HOW IT WORKS
+    1) The function takes in a parameter (alien) which is a DOM object
+    2) A DOM object is created and assigned to the variable bomb
+    3) bomb is then given a class of 'bomb' and added to mainContainer
+    4) The left and top position of bomb is set to the left and vertical
+    position of alien respectively
+    5) The moveBomb() function is then called with bomb passed in as a parameter
+    */
     const bomb = document.createElement('div')
     bomb.classList.add('bomb')
     mainContainer.appendChild(bomb)
@@ -277,6 +330,11 @@ function setUp() {
   }
 
   function dropBombs() {
+    /* HOW IT WORKS
+    1) IF the value of bombCondition at a randomly chosen index is true
+      a) An alien from the aliens array is randomly chosen and assigned to chosenAlien
+      b) The createBomb() is called with chosenAlien passed as a parameter
+    */
     if (bombCondition[Math.floor(Math.random() * bombCondition.length)]) {
       const chosenAlien = aliens[Math.floor(Math.random() * aliens.length)]
       createBomb(chosenAlien)
