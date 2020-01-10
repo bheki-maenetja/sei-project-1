@@ -47,28 +47,28 @@ function setUp() {
     motherShipsLives: 15
   }]
 
-  let isGameOver = true
-  let gameResult
-  let gameClock = null
-  let motherShipInPlay = false
+  let isGameOver = true // Bool --> Tracks whether the game is in play or not
+  let gameResult // Array --> stores the final result and a string denoting how the game was won/lost
+  let gameClock = null // Number --> tracks the duration of the game
+  let motherShipInPlay = false // Bool --> Tracks whether or not the mothership is in the game
 
-  let diffSetting
-  let bombCondition
-  let motherShipLife
+  let diffSetting // Object --> Stores the game configuration settings for the selected difficulty
+  let bombCondition // Array --> Stores false values; the value at the first index is true
+  let motherShipLife // Number --> Stores the number of remaining lives the mothership has
 
   const gamePlayStats = ['gamesPlayed', 'wins', 'losses','highScore', 'totalScore', 'alienKills', 'motherShipKills', 'wavesFought', 'ammoUsed', 'livesLost', 'populationLoss', 'gameTime']
-  gamePlayStats.forEach(stat => localStorage.setItem(stat, 0))
+  gamePlayStats.forEach(stat => localStorage.setItem(stat, 0)) // Initialises all of the player stats in localStorage
 
   // Timer Variables
-  let gameTimer = null
-  let gameOverTimer = null
-  let gunMoveTimer = null
-  let alienMoveTimer = null
+  let gameTimer = null // Runs every second after the game starts
+  let gameOverTimer = null // Runs every millisecond to check if the game should end
+  let gunMoveTimer = null // Runs every 12 milliseconds to control the movements of the gunner
+  let alienMoveTimer = null // Runs every millisecond to move the alien container
 
   // DOM Variables
-  let charCode = null
-  let alienX = null
-  let direction = true
+  let charCode = null // Number --> Stores the keyCode value of a keydown event
+  let alienX = null // Number --> Stores the x-coordinate of the alien container
+  let direction = true // Bool --> Tracks whether not the alien container needs to change direction
 
   const header = document.querySelector('header')
   const main = document.querySelector('main')
@@ -112,15 +112,15 @@ function setUp() {
   const alienKillAudio = document.querySelector('#alien-kill')
   const mainThemeAudio = document.querySelector('#main-theme')
 
-  let aliens
-  let alienStep
-  let alienContainer
-  let bunkers 
-  let bunkerContainer
-  let gunner
-  let gunX
-  let gunStep
-  let citySkyline
+  let aliens // Array --> Stores all the divs with a class of alien or mothership
+  let alienStep // Number --> Stores the value (in px) the alien container will move left or right
+  let alienContainer // DOM Object --> Container for all divs with class of alien or mothership
+  let bunkers // Arrays --> Stores all divs with a class of bunker
+  let bunkerContainer // DOM Object --> Container for all divs with class of bunker
+  let gunner // DOM Object --> Div with class of gunner
+  let gunX // DOM Object --> X-coordinate of the gunner
+  let gunStep // Number --> Value (in px) the gunner will move left or right
+  let citySkyline // DOM Object --> Div with a background image of a city skyline 
   
   // FUNCTIONS
 
