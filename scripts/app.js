@@ -441,6 +441,20 @@ function setUp() {
 
   // Collision Detection
   function collisionDetector(movObj, statObj, movOffsetX = 0, movOffsetY = 0, statOffsetX = 0, statOffsetY = 0) {
+    /* HOW IT WORKS
+    1) The function takes 6 parameters:
+      > A moving object (movObj)
+      > A static object (statObj)
+      > The horizontal and vertical offsets of the moving object (movOffsetX & movOffsetY)
+      > The horizontal and vertical offsets of the static object (statOffsetX & statOffsetY)
+    2) The position of the moving object is defined relative to the mainContainer 
+    3) The position of the static object is defined relative to the mainContainer
+    4) The function checks if the two objects are in the same horizontal position; a boolean
+    representing this condition is then assigned to xCondition
+    5) The function checks if the two objects are in the same vertical position; a boolean
+    representing this condition is then assigned to yCondition
+    6) The function checks if either xCondition or yCondition is true and returns a boolean
+    */
     const movX = movObj.offsetLeft + movOffsetX
     const movY = movObj.offsetTop + movOffsetY
     const statX = statObj.offsetLeft + statOffsetX
@@ -499,7 +513,6 @@ function setUp() {
     if (player.wavesFought === 0 && !motherShipInPlay && aliens.every(item => item.offsetTop > 0.3 * alienContainer.scrollHeight)) addMotherShip()
     if (aliens.every(item => item.offsetTop > 0.6 * alienContainer.scrollHeight) && !motherShipInPlay) addAliens(diffSetting.waveSize)
     dropBombs()
-    // console.log('Playing the GAME!')
     gameOverTimer = setInterval(checkForGameOver, 1)
   }
 
@@ -535,7 +548,6 @@ function setUp() {
     if (aliens.length === 0 && player.wavesFought < 0 || player.lives === 0 || player.cityPopulation === 0) {
       gameOver()
     }
-    // console.log('Running game over timer')
   }
 
   // Game Over & Reset
@@ -619,7 +631,6 @@ function setUp() {
     localStorage.livesLost = parseInt(localStorage.livesLost) + (diffSetting.playerLives - player.lives)
     localStorage.populationLoss = parseInt(localStorage.populationLoss) + (100000 - player.cityPopulation)
     localStorage.gameTime = parseInt(localStorage.gameTime) + gameClock
-    console.log(localStorage)
   }
 
   function gameOver() {
@@ -743,7 +754,7 @@ function setUp() {
   // Event Handlers
   function keyDownHandler(e) {
     if (isGameOver) {
-      console.log('Game is not in play!')
+      return
     } else if (e.keyCode === 32) {
       fireBullet()
     } else if ([37,39].includes(e.keyCode)) {
