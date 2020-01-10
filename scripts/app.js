@@ -20,7 +20,7 @@ function setUp() {
     numBunkers: 3,
     bunkerStrength: 3,
     playerLives: 5,
-    playerAmmo: 65,
+    playerAmmo: 80,
     populationHit: 1000,
     motherShipsLives: 5
   }, {
@@ -31,7 +31,7 @@ function setUp() {
     numBunkers: 2,
     bunkerStrength: 6,
     playerLives: 3,
-    playerAmmo: 140,
+    playerAmmo: 150,
     populationHit: 2000,
     motherShipsLives: 10
   }, {
@@ -42,7 +42,7 @@ function setUp() {
     numBunkers: 1,
     bunkerStrength: 9,
     playerLives: 1,
-    playerAmmo: 290,
+    playerAmmo: 300,
     populationHit: 4000,
     motherShipsLives: 15
   }]
