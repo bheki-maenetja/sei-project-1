@@ -43,5 +43,9 @@ for (let I = 0; I < bunkers.length; I++) {
     bunkers.forEach(item => item[0].classList.add(‘fixed-bunker’))
 ```
 
+Once positioning was sorted the layout of the game looked like this:
+![](README/Screenshot%202019-12-30%20at%2014.20.36.png)
+
 ### Moving Objects
+Figuring out how to move elements was easy. The alien container & gunner each have functions that increment their horizontal position. Initially, these functions would increment the position of an element by 1px but in order to aid responsive design this was change to 1% of the main container’s width. When called at an interval of a few milliseconds these functions allowed for the smooth movement of both the alien container and the gunner.
 
