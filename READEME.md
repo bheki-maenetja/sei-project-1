@@ -1,6 +1,3 @@
-
-
-
 # WDI Project 01 — Space Invaders
 ## Overview
 This project is a front-end web application built with HTML, CSS and vanilla JavaScript. It’s an implementation of the popular arcade game Space Invaders.
