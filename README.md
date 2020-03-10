@@ -24,5 +24,6 @@ The game is a Star Wars themed implementation of the popular arcade game Space I
 |![](assets/screenshot-titlepage.png)<figcaption>Title page</figcaption>  |![](assets/screenshot-homepage.png)<figcaption>Home page</figcaption> |
 |----------|--------------------------|
 
-<img src="assets/screenshot-gameplay.gif" alt="game play" width="100%" />
 <figcaption><strong>Gameplay</strong></figcaption>
+<img src="assets/screenshot-gameplay.gif" alt="game play" width="100%" />
+
