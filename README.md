@@ -1,45 +1,22 @@
-# WDI Project 01 — Space Invaders
-## Overview
-This project is a front-end web application built with HTML, CSS and vanilla JavaScript. It’s an implementation of the popular arcade game Space Invaders.
+# ![](https://ga-dash.s3.amazonaws.com/production/assets/logo-9f88ae6c9c3871690e33280fcf557f33.png) SEI45 --- Project 01
+My first project for the General Assembly Software Engineering Immersive course. It is a static web application based on the popular arcade game Space Invaders.
 
-## Approach
-Rather than using a grid, the game works by adding and removing objects that are positioned absolutely within a container. The objects are then animated by calling functions that adjust their absolute position.
+## Getting Started
+### Installation
+- Clone this repository by running the terminal command: `git clone git@github.com:bheki-maenetja/sei-project-1.git`
+- Open the index.html file in a web browser of your choice
 
-## Development
-The development of the MVP was broken down into 4 major tasks for the:
-	* Positioning & Layout
-	* Moving Objects
-	* Collision Detection
-	* Implementation of game logic
+### Deployment
+- You can view the deployed version of the webapp [here](https://bheki-maenetja.github.io/sei-project-1/)
 
-The development of additional functionality was broken down into 4 tasks:
-	* Adding additional aliens & mothership
-	* Responsive Design
-	* Implementing difficulty settings
-	* Tracking player statistics
+## Project Overview
+### Technologies Used
+- HTML
+- CSS
+- Vanilla JavaScript (ES6)
 
-### Positioning & Layout
-Positioning elements proved to be straightforward at first. Inside the main container there would be 3 elements:
-	* A div representing the gunner
-	* A container for the aliens
-	* A container for the bunkers
-
-Each element in the main container is is positioned absolutely with its position, width & height defined relative to the main container. 
-
-The positioning of aliens and bunkers within their respective containers proved to be more challenging. After much trial and error, I realised I had to first add the objects to their container and then retroactively set their position to absolute. Given that their containers have a `display: flex`
-property, the objects would first be spaced out evenly and then be fixed to their container. The following code demonstrates how this was done:
-```
-for (let I = 0; I < bunkers.length; I++) {
-      const bunkerDiv = document.createElement(‘div’)
-      bunkerDiv.classList.add(‘bunker’)
-      bunkers[I] = [bunkerDiv, diffSetting.bunkerStrength]
-      bunkerContainer.appendChild(bunkerDiv)
-    }
-
-    bunkers.forEach(item => item[0].style.left = `${item[0].offsetLeft}px`)
-    bunkers.forEach(item => item[0].classList.add(‘fixed-bunker’))
-```
-
-### Moving Objects
-Figuring out how to move elements was easy. The alien container & gunner each have functions that increment their horizontal position. Initially, these functions would increment the position of an element by 1px but in order to aid responsive design this was change to 1% of the main container’s width. When called at an interval of a few milliseconds these functions allowed for the smooth movement of both the alien container and the gunner.
-
+### Approach
+Although the project brief suggested that the project should be a grid-based game, rather than using a grid, the game works by adding and removing objects that are positioned absolutely within a DOM container. The objects are then animated by calling functions that adjust their position relative to the container.
+ 
+## How It Works
+The game is a Star Wars themed implementation of the popular arcade game Space Invaders. A player chooses their desired difficulty. When the game begins the player will have a finite amount of ammo to shoot down multiple waves of approaching aliens.
