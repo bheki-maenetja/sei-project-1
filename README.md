@@ -21,7 +21,8 @@ Although the project brief suggested that the project should be a grid-based gam
 ## How It Works
 The game is a Star Wars themed implementation of the popular arcade game Space Invaders. A player chooses their desired difficulty. When the game begins the player will have a finite amount of ammo (and lives) to shoot down multiple waves of approaching aliens. The objective of the game is to eliminate all the aliens before they destroy the city. The player get points for each alien kill and bonus points for each Darth Vader kill.
 
-|![](assets/screenshot-titlepage.png)  |![](assets/screenshot-homepage.png) |
+|![](assets/screenshot-titlepage.png)<figcaption>Title page</figcaption>  |![](assets/screenshot-homepage.png)<figcaption>Home page</figcaption> |
 |----------|--------------------------|
 
 <img src="assets/screenshot-gameplay.gif" alt="game play" width="100%" />
+<figcaption><strong>Gameplay</strong></figcaption>
