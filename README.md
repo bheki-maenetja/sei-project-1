@@ -9,8 +9,7 @@ My first project for the General Assembly Software Engineering Immersive course.
 ### Deployment
 - You can view the deployed version of the webapp [here](https://bheki-maenetja.github.io/sei-project-1/)
 
-## Project Overview
-### Technologies Used
+## Technologies Used
 - HTML
 - CSS
 - Vanilla JavaScript (ES6)
@@ -28,11 +27,11 @@ The game is a Star Wars themed implementation of the popular arcade game Space I
 Although the project brief suggested that the project should be a grid-based game, rather than using a grid, the game works by adding and removing objects positioned within a DOM container. The objects are then animated by calling functions that adjust their position relative to the container.
 
 ### The DOM Container
-- This a simple div element with a fixed width of 500px and height of 95% of the viewport
-- Everything that happens during the game takes place within the DOM container. Aliens and bunkers are themselves placed in containers that are positioned relative to the container.
-- When the game is not in play the user navigates through the site by toggling the diplay property of menu divs positioned within the container thus creating the illusion of 'pages' when in fact there is only one page.
+- This a simple `div` element with a fixed width of 500px and height of 95% of the viewport
+- Everything that happens during the game takes place within the DOM container. Aliens and bunkers are themselves placed in containers that are positioned relative to this container.
+- When the game is not in play the user navigates through the site by toggling the display property of menu `div`s positioned within the container thus creating the illusion of 'pages' when in fact there is only one page.
 ```
-// Site navigation
+// Website navigation
 function goGameOver() {
     gameResultSpan.innerHTML = gameResult[1]
     gameOverDiv.style.display = 'flex'
@@ -74,7 +73,7 @@ function goGameOver() {
 
 ### Moving Objects
 - Objects are moved by using JavaScript's built-in `setInterval()` function.
-- Each interval is passed a callback function that slightly adjusts the relative - horizontal in the case of aliens and the spaceship, vertical in the case of bullets & bombs - position of an object within the main container.
+- Each interval is passed a callback function that slightly adjusts the relative position - horizontal in the case of aliens and the spaceship, vertical in the case of bullets & bombs - of an object within the main container.
 - Calling these callback functions at an interval of a few milliseconds allows for the slick, seamless movement of objects.
 
 ```
@@ -132,7 +131,7 @@ function moveAliens() {
 ### Collsion Detection
 - The game's functionality relies on the ability to detect collsions between bullets & aliens, bombs & the spaceship, bombs & the city etc.
 - All collisions between objects are handled by a universal collision detection function that compares the relative positions of a mobile and static object and returns a boolean denoting whether or not a collsion has occured.
-- It is important to note that the game only acts upon collisions between mobile and static objects; it cannot detect collsions between to moving objects (e.g. a bullet hitting a bomb)
+- It is important to note that the game only acts upon collisions between **one mobile and one static object**; it cannot detect collsions between to moving objects (e.g. a bullet hitting a bomb)
 
 ```
 // The universal collision detection function
@@ -160,3 +159,16 @@ function collisionDetector(movObj, statObj, movOffsetX = 0, movOffsetY = 0, stat
     return xCondition || yCondition
   }
 ```
+## Reflection
+### Challenges
+- The main challenge of this project was the positioning and layout of DOM elements; particularly the positioning of aliens. Each alien first has to be positioned relatively within the alien container and the positioned absolutely when the game starts; this ensures that aliens remain fixed in place when an adjacent alien is destroyed.
+- Another challenge was the management of timers. The game uses timers for the movements of the spaceship and alien container. Additionally, a new timer is initialised each time a bullet or bomb is fired; this timer is stopped when the bullet or bomb hits another object.
+
+### Room for Improvement
+- Responsive design: whilst the game does have a responsive layout, the various 'pages' of game are still too small on mobile screens
+- Animation of bullets and bombs: though they work fine in practice, the functions used to adjust the position of bullets and bombs are clunky and inefficient. Perhaps a better solution would involve the use of css animations.
+- Ammo glitch: during gameplay it is possible for a player to run out of ammo. The player then has to wait for the aliens to destroy the city or purposely get themselves killed. There are a number of ways to resolve this: unlimited ammo, ammo packs etc.
+
+## Future Features
+- Complex alien movements: in the game all the aliens are fixed to a container and therefore move in unison; in easier difficulty levels this makes their movements quite predictable. In the next iteration of the game, aliens will be able to move independently of eachother and at different speeds. Some might be moving right while others move left. It should be quite the challenge even on the easiest difficulty level!
+- Levels & Unlockables: the next iteration of the game will allow players to 'level up'. A player's 'level' will be calculated from gameplay stats such as alien kills, waves fought, mothership kills etc. Levelling up will allow a player to unlock bonus features such more powerful guns, speed boosts, ammo packs etc.
