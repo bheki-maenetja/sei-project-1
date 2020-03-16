@@ -165,10 +165,10 @@ function collisionDetector(movObj, statObj, movOffsetX = 0, movOffsetY = 0, stat
 - Another challenge was the management of timers. The game uses timers for the movements of the spaceship and alien container. Additionally, a new timer is initialised each time a bullet or bomb is fired; this timer is stopped when the bullet or bomb hits another object.
 
 ### Room for Improvement
-- Responsive design: whilst the game does have a responsive layout, the various 'pages' of game are still too small on mobile screens
-- Animation of bullets and bombs: though they work fine in practice, the functions used to adjust the position of bullets and bombs are clunky and inefficient. Perhaps a better solution would involve the use of css animations.
-- Ammo glitch: during gameplay it is possible for a player to run out of ammo. The player then has to wait for the aliens to destroy the city or purposely get themselves killed. There are a number of ways to resolve this: unlimited ammo, ammo packs etc.
+- **Responsive design**: whilst the game does have a responsive layout, the various 'pages' of game are still too small on mobile screens
+- **Animation of bullets and bombs**: though they work fine in practice, the functions used to adjust the position of bullets and bombs are clunky and inefficient. Perhaps a better solution would involve the use of css animations.
+- **Ammo glitch**: during gameplay it is possible for a player to run out of ammo. The player then has to wait for the aliens to destroy the city or purposely get themselves killed. There are a number of ways to resolve this: unlimited ammo, ammo packs etc.
 
 ## Future Features
-- Complex alien movements: in the game all the aliens are fixed to a container and therefore move in unison; in easier difficulty levels this makes their movements quite predictable. In the next iteration of the game, aliens will be able to move independently of eachother and at different speeds. Some might be moving right while others move left. It should be quite the challenge even on the easiest difficulty level!
-- Levels & Unlockables: the next iteration of the game will allow players to 'level up'. A player's 'level' will be calculated from gameplay stats such as alien kills, waves fought, mothership kills etc. Levelling up will allow a player to unlock bonus features such more powerful guns, speed boosts, ammo packs etc.
+- **Complex alien movements**: in the game all the aliens are fixed to a container and therefore move in unison; in easier difficulty levels this makes their movements quite predictable. In the next iteration of the game, aliens will be able to move independently of eachother and at different speeds. Some might be moving right while others move left. It should be quite the challenge even on the easiest difficulty level!
+- **Levels & Unlockables**: the next iteration of the game will allow players to 'level up'. A player's 'level' will be calculated from gameplay stats such as alien kills, waves fought, mothership kills etc. Levelling up will allow a player to unlock bonus features such more powerful guns, speed boosts, ammo packs etc.
