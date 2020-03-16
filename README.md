@@ -14,7 +14,7 @@ My first project for the General Assembly Software Engineering Immersive course.
 - CSS
 - Vanilla JavaScript (ES6)
  
-## How It Works
+## Overview
 The game is a Star Wars themed implementation of the popular arcade game Space Invaders. A player chooses their desired difficulty. When the game begins, the player will have a finite amount of lives (and ammo) to shoot down multiple waves of approaching aliens. The player moves their spacecraft with the left and right arrow keys whilst firing bullets with the spacebar. The objective of the game is to eliminate all the aliens before they destroy the city. Points are awarded for each alien kill and bonus points are won for each Darth Vader kill.
 
 |![](assets/screenshot-titlepage.png)<figcaption>Title page</figcaption>  |![](assets/screenshot-homepage.png)<figcaption>Home page</figcaption> |
