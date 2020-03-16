@@ -23,7 +23,7 @@ The game is a Star Wars themed implementation of the popular arcade game Space I
 <figcaption><strong>Gameplay</strong></figcaption>
 <img src="assets/screenshot-gameplay.gif" alt="game play" width="100%" />
 
-## Approach
+## Development
 Although the project brief suggested that the project should be a grid-based game, rather than using a grid, the game works by adding and removing objects positioned within a DOM container. The objects are then animated by calling functions that adjust their position relative to the container.
 
 ### The DOM Container
