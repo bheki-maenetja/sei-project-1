@@ -27,7 +27,7 @@ The game is a Star Wars themed implementation of the popular arcade game Space I
 Although the project brief suggested that the project should be a grid-based game, rather than using a grid, the game works by adding and removing objects positioned within a DOM container. The objects are then animated by calling functions that adjust their position relative to the container.
 
 ### The DOM Container
-- This a simple `div` element with a fixed width of 500px and height of 95% of the viewport
+- This a simple `div` element with a fixed width of 500px and a height that is 95% of the viewport
 - Everything that happens during the game takes place within the DOM container. Aliens and bunkers are themselves placed in containers that are positioned relative to this container.
 - When the game is not in play the user navigates through the site by toggling the display property of menu `div`s positioned within the container thus creating the illusion of 'pages' when in fact there is only one page.
 ```
